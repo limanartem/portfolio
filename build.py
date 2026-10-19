@@ -28,7 +28,42 @@ def asset(name):
 
 def e(s): return html.escape(s, quote=True)
 
-ARROW = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg>'
+# Stroke icons on a 24x24 grid; svg() wraps them in the shared outline attributes.
+ICON_PATHS = {
+ 'arrow': '<path d="M7 17 17 7M8 7h9v9"/>',
+ 'zoom': '<circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3M11 8v6M8 11h6"/>',
+ 'lock': '<rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>',
+ 'prev': '<path d="M15 18l-6-6 6-6"/>',
+ 'next': '<path d="M9 18l6-6-6-6"/>',
+ 'system': '<rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4"/>',
+ 'light': '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
+ 'dark': '<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>',
+ 'menu': '<path d="M4 7h16M4 12h16M4 17h16"/>',
+ 'close': '<path d="M6 6l12 12M18 6 6 18"/>',
+}
+def svg(name, size=16, sw=2, cls=''):
+    c = f' class="{cls}"' if cls else ''
+    return f'<svg{c} width="{size}" height="{size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="{sw}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">{ICON_PATHS[name]}</svg>'
+
+ARROW = svg('arrow', sw=2.2)
+LINKEDIN = "https://www.linkedin.com/in/artem-liman"
+GITHUB = "https://github.com/limanartem"
+def ext(href, inner, cls='', label=''):
+    """Link that opens in a new tab."""
+    c = f' class="{cls}"' if cls else ''
+    a = f' aria-label="{label}"' if label else ''
+    return f'<a{c} href="{href}" target="_blank" rel="noopener"{a}>{inner}</a>'
+# id, nav label (None = not in the nav), section label; order sets the 01..06 numbering
+SECTIONS = [('about', 'About', 'About'), ('impact', 'Impact', 'Selected impact'), ('experience', 'Career', 'Career'),
+            ('projects', 'Projects', 'Side projects'), ('skills', 'Skills', 'Toolbox'), ('contact', None, 'Contact')]
+def nav(cls=''):
+    c = f' class="{cls}"' if cls else ''
+    return ''.join(f'<a{c} href="#{i}">{n}</a>' for i, n, _ in SECTIONS if n)
+def eyebrow(sid):
+    k, label = next((k, l) for k, (i, _, l) in enumerate(SECTIONS, 1) if i == sid)
+    return f'<span class="eyebrow">{k:02d} / {label}</span>'
+TITLE = "Artem Liman · Engineering Manager &amp; Team Lead"
+DESC = "Artem Liman, Engineering Manager and Team Lead in eHealth. 20+ years in software, 10 leading teams. Portfolio, career and side projects."
 BULLET = '<span class="bullet" aria-hidden="true"></span>'
 
 HERO_PHOTOS = [  # order = slide order; one entry = no slider
@@ -83,7 +118,7 @@ earlier = [
  ('leonorm','2001 – 2005','Ukraine','Software Developer','Leonorm','Internal projects for a national standards organisation: database design and Windows Forms applications.','.NET 1.1 · C# · VB.NET · Caché'),
 ]
 
-def img(src, caption, bg='var(--surface)', pad='20px'): return dict(kind='img', src=asset(src), caption=caption, bg=bg, pad=pad)
+def img(src, caption, bg=None, pad=None): return dict(kind='img', src=asset(src), caption=caption, bg=bg, pad=pad)
 
 projects = [
  dict(id='planner', name='Schiftmanager', kind='Resource & shift planning SaaS', status='Private beta',
@@ -106,9 +141,10 @@ projects = [
               'Per-exercise detail: target muscles, how-to, pro tips and common mistakes',
               'Localised UI (English, Ukrainian); zero-friction onboarding without sign-up'],
       tech=['Mobile','TypeScript','OpenAI API'], private=True,
-      slides=[img('assets/training-1.jpg','Onboarding and equipment scan: photos of the training space feed the plan generator','#0E1013','0px'),
-              img('assets/training-2.jpg','Generated weekly programme and exercise detail with today’s target','#0E1013','0px'),
-              img('assets/training-3.jpg','Plan ready: days per week, experience level and goal','#0E1013','0px')]),
+      slide_bg=('#0E1013', '0px'),  # default for slides that don't set their own
+      slides=[img('assets/training-1.jpg','Onboarding and equipment scan: photos of the training space feed the plan generator'),
+              img('assets/training-2.jpg','Generated weekly programme and exercise detail with today’s target'),
+              img('assets/training-3.jpg','Plan ready: days per week, experience level and goal')]),
  dict(id='shop', name='Shop.App', kind='Distributed systems playground', status='Open source',
       desc='A web shop used as a playground for integrating distributed components: polyglot microservices, message-driven order processing and web and mobile clients, all running with a single docker-compose up.',
       points=['Orders flow through RabbitMQ workers (pending → payment → dispatch) with status updates back to the UI',
@@ -127,10 +163,11 @@ projects = [
               'Weather widget built with MUI and MUI X Charts'],
       tech=['React','TypeScript','Module Federation','Webpack','MUI','MUI X Charts'],
       repo='https://github.com/limanartem/Home.App',
-      slides=[img('assets/home-wall.jpg','The finished panel, wall-mounted in a picture frame: clock, weather, room climate, calendar and live tram departures','#0E1013','0px'),
-              img('assets/home-ui.jpg','Home Control Panel: Google Calendar, weather, temperature and humidity from a room sensor, next RNV departures from two nearby stops','#0E1013','0px'),
-              img('assets/home-rpi.jpg','Debugging the dashboard on a Raspberry Pi 3 with Windows 10 IoT Core and a 10-inch touch screen','#0E1013','0px'),
-              img('assets/home-parts.jpg','Parts: Raspberry Pi 3, 10-inch touch display, VESA mount, standoffs and a temperature/humidity sensor','#0E1013','0px'),
+      slide_bg=('#0E1013', '0px'),
+      slides=[img('assets/home-wall.jpg','The finished panel, wall-mounted in a picture frame: clock, weather, room climate, calendar and live tram departures'),
+              img('assets/home-ui.jpg','Home Control Panel: Google Calendar, weather, temperature and humidity from a room sensor, next RNV departures from two nearby stops'),
+              img('assets/home-rpi.jpg','Debugging the dashboard on a Raspberry Pi 3 with Windows 10 IoT Core and a 10-inch touch screen'),
+              img('assets/home-parts.jpg','Parts: Raspberry Pi 3, 10-inch touch display, VESA mount, standoffs and a temperature/humidity sensor'),
               dict(kind='mf', caption='Host loads typed remote widgets at runtime')]),
 ]
 
@@ -175,9 +212,10 @@ def chips(items, icons=False):
     return ''.join(f'<span class="chip">{ico(t) if use else ""}{e(t)}</span>' for t in items)
 def bullets(items, cls='pt'): return ''.join(f'<li class="{cls}">{BULLET}<span>{e(p)}</span></li>' for p in items)
 
-def slide_html(s):
+def slide_html(s, default_bg=('var(--surface)', '20px')):
     if s['kind']=='img':
-        return f'<div class="slide"><div class="slide-img" style="background:{s["bg"]};padding:{s["pad"]}"><button type="button" class="zoom" aria-label="View full size: {e(s["caption"])}"><img src="{s["src"]}" alt="{e(s["caption"])}" loading="lazy"><span class="zoom-hint" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3M11 8v6M8 11h6"/></svg></span></button></div></div>'
+        bg, pad = s['bg'] or default_bg[0], s['pad'] or default_bg[1]
+        return f'<div class="slide"><div class="slide-img" style="background:{bg};padding:{pad}"><button type="button" class="zoom" aria-label="View full size: {e(s["caption"])}"><img src="{s["src"]}" alt="{e(s["caption"])}" loading="lazy"><span class="zoom-hint" aria-hidden="true">{svg("zoom", 16)}</span></button></div></div>'
     if s['kind']=='mf':
         return '''<div class="slide"><div class="slide-mf">
 <div class="mf-host"><div class="mono mf-k">host</div><div class="disp mf-name">home.app.host</div><div class="mono mf-k">Webpack Module Federation</div></div>
@@ -193,18 +231,18 @@ def slide_html(s):
 def project_html(p, i):
     rev = ' reverse' if i % 2 else ''
     links = ''
-    if p.get('live'): links += f'<a class="btn btn-primary sm" href="{p["live"][0]}" target="_blank" rel="noopener">{e(p["live"][1])}{ARROW}</a>'
-    if p.get('repo'): links += f'<a class="btn btn-ghost sm" href="{p["repo"]}" target="_blank" rel="noopener">{ico('GitHub', 15)}View on GitHub</a>'
-    if p.get('private'): links += '<span class="mono private"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>Private repository</span>'
+    if p.get('live'): links += ext(p['live'][0], e(p['live'][1]) + ARROW, 'btn btn-primary sm')
+    if p.get('repo'): links += ext(p['repo'], ico('GitHub', 15) + 'View on GitHub', 'btn btn-ghost sm')
+    if p.get('private'): links += f'<span class="mono private">{svg("lock", 14)}Private repository</span>'
     dots = ''.join(f'<button type="button" class="dothit" data-go="{k}" aria-label="Go to slide {k+1}"><span class="dot{" on" if k==0 else ""}"></span></button>' for k in range(len(p['slides'])))
     captions = json.dumps([s['caption'] for s in p['slides']])
     return f'''<article class="project{rev}" data-carousel data-captions='{e(captions)}'>
 <div class="pr-media" data-reveal="{'right' if i % 2 else 'left'}">
 <div class="carousel" role="region" aria-roledescription="carousel" aria-label="{e(p["name"])} screenshots">
-<div class="slides">{''.join(slide_html(s) for s in p['slides'])}</div>
+<div class="slides">{''.join(slide_html(s, p.get('slide_bg', ('var(--surface)', '20px'))) for s in p['slides'])}</div>
 <div class="car-ui"><span class="mono counter">01 / {len(p['slides']):02d}</span>
-<div class="car-btns"><button type="button" class="sbtn" data-prev aria-label="Previous slide"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></button>
-<button type="button" class="sbtn" data-next aria-label="Next slide"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg></button></div></div>
+<div class="car-btns"><button type="button" class="sbtn" data-prev aria-label="Previous slide">{svg("prev", 18)}</button>
+<button type="button" class="sbtn" data-next aria-label="Next slide">{svg("next", 18)}</button></div></div>
 </div>
 <div class="car-foot"><span class="caption">{e(p['slides'][0]['caption'])}</span><div class="dots">{dots}</div></div>
 </div>
@@ -218,9 +256,12 @@ def project_html(p, i):
 </div>
 </article>'''
 
+def tl_left(period, slugs, company, place):
+    return f'<div class="tl-left"><span class="mono period">{e(period)}</span><span class="company-row">{logo(slugs, company)}<span class="disp company">{e(company)}</span></span><span class="place">{e(place)}</span></div>'
+
 def job_html(j, current=False):
     return f'''<li class="tl-item{' current' if current else ''}" data-reveal>
-<div class="tl-left"><span class="mono period">{e(j['period'])}</span><span class="company-row">{logo(j['logo'], j['company'])}<span class="disp company">{e(j['company'])}</span></span><span class="place">{e(j['place'])}</span></div>
+{tl_left(j['period'], j['logo'], j['company'], j['place'])}
 <div class="tl-dot" aria-hidden="true"></div>
 <div class="tl-body"><h3 class="disp">{e(j['role'])}</h3><p class="scope">{e(j['scope'])}</p>
 <ul class="pts">{bullets(j['points'])}</ul><div class="chips">{chips(j['tech'])}</div></div>
@@ -228,7 +269,7 @@ def job_html(j, current=False):
 
 def early_html(slug, p, pl, r, c, b, t):
     return f'''<li class="tl-item compact" data-reveal>
-<div class="tl-left"><span class="mono period">{e(p)}</span><span class="company-row">{logo(slug, c)}<span class="disp company">{e(c)}</span></span><span class="place">{e(pl)}</span></div>
+{tl_left(p, slug, c, pl)}
 <div class="tl-dot" aria-hidden="true"></div>
 <details class="tl-body">
 <summary><span class="disp role">{e(r)}</span><span class="plus" aria-hidden="true">+</span></summary>
@@ -241,10 +282,10 @@ page = f'''<!doctype html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Artem Liman · Engineering Manager &amp; Team Lead</title>
-<meta name="description" content="Artem Liman, Engineering Manager and Team Lead in eHealth. 20+ years in software, 10 leading teams. Portfolio, career and side projects.">
-<meta property="og:title" content="Artem Liman · Engineering Manager &amp; Team Lead">
-<meta property="og:description" content="20+ years building software, 10 of them leading teams. Portfolio, career and side projects.">
+<title>{TITLE}</title>
+<meta name="description" content="{DESC}">
+<meta property="og:title" content="{TITLE}">
+<meta property="og:description" content="{DESC}">
 <meta property="og:type" content="website">
 <meta property="og:image" content="{SITE_URL}{asset(HERO_PHOTOS[0][0])}">
 <meta property="og:url" content="{SITE_URL}">
@@ -265,25 +306,25 @@ document.documentElement.setAttribute('data-js','');
 <nav aria-label="Main">
 <a href="#top" class="brand disp"><span class="brand-mark">AL</span><span>Artem Liman</span></a>
 <div class="navlinks">
-<a class="navlink" href="#about">About</a><a class="navlink" href="#impact">Impact</a><a class="navlink" href="#experience">Career</a><a class="navlink" href="#projects">Projects</a><a class="navlink" href="#skills">Skills</a>
+{nav("navlink")}
 </div>
 <div class="nav-right">
 <div class="seg" role="group" aria-label="Colour theme">
-<button type="button" class="segbtn" data-theme-set="" title="System" aria-label="Follow system theme"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg></button>
-<button type="button" class="segbtn" data-theme-set="light" title="Light" aria-label="Light theme"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
-<button type="button" class="segbtn" data-theme-set="dark" title="Dark" aria-label="Dark theme"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button>
+<button type="button" class="segbtn" data-theme-set="" title="System" aria-label="Follow system theme">{svg("system", 16)}</button>
+<button type="button" class="segbtn" data-theme-set="light" title="Light" aria-label="Light theme">{svg("light", 16)}</button>
+<button type="button" class="segbtn" data-theme-set="dark" title="Dark" aria-label="Dark theme">{svg("dark", 16)}</button>
 </div>
 <a class="btn btn-primary sm nav-contact" href="#contact">Contact</a>
 <button type="button" class="burger" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
-<svg class="i-open" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
-<svg class="i-close" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+{svg("menu", 20, cls="i-open")}
+{svg("close", 20, cls="i-close")}
 </button>
 </div>
 </nav>
 <div id="mobile-menu" class="mobile-menu" hidden>
-<a href="#about">About</a><a href="#impact">Impact</a><a href="#experience">Career</a><a href="#projects">Projects</a><a href="#skills">Skills</a>
+{nav()}
 <a href="#contact" class="btn btn-primary">Contact</a>
-<div class="mm-links"><a href="https://www.linkedin.com/in/artem-liman" target="_blank" rel="noopener">{ico('LinkedIn', 16)}LinkedIn</a><a href="https://github.com/limanartem" target="_blank" rel="noopener">{ico('GitHub', 16)}GitHub</a></div>
+<div class="mm-links">{ext(LINKEDIN, ico("LinkedIn", 16) + "LinkedIn")}{ext(GITHUB, ico("GitHub", 16) + "GitHub")}</div>
 </div>
 <div class="progress" aria-hidden="true"></div>
 </header>
@@ -300,8 +341,8 @@ document.documentElement.setAttribute('data-js','');
 <p class="in d1 disp tagline">Engineering Manager &amp; Team Lead who still reads the diff.</p>
 <p class="in d2 lede">20+ years building software, 10 of them leading teams. Today I run two product teams at CompuGroup Medical shipping CGM Praxis, a cloud SaaS for medical practices in Germany.</p>
 <div class="in d3 btns hero-btns">
-<a class="btn btn-primary" href="https://www.linkedin.com/in/artem-liman" target="_blank" rel="noopener">{ico('LinkedIn', 16)}LinkedIn</a>
-<a class="btn btn-ghost" href="https://github.com/limanartem" target="_blank" rel="noopener">{ico('GitHub', 16)}GitHub</a>
+{ext(LINKEDIN, ico("LinkedIn", 16) + "LinkedIn", "btn btn-primary")}
+{ext(GITHUB, ico("GitHub", 16) + "GitHub", "btn btn-ghost")}
 <a class="btn btn-ghost" href="#projects">Side projects</a>
 </div>
 <div class="in d4 mono hero-meta"><span>Walldorf, Germany</span><span>EN C1 · DE B2 · UA/RU native</span></div>
@@ -322,7 +363,7 @@ document.documentElement.setAttribute('data-js','');
 <div class="marquee" aria-label="Technologies"><div class="track disp">{''.join(f'<span>{ico(t, 26)}{e(t)}<i aria-hidden="true">◆</i></span>' for t in tech_marquee*2)}</div></div>
 
 <section id="about" class="sec">
-<div class="wrap"><div class="sticky-label"><span class="eyebrow">01 / About</span></div></div>
+<div class="wrap"><div class="sticky-label">{eyebrow("about")}</div></div>
 <div class="wrap two-col">
 <div class="col-l" data-reveal="left"><h2 class="disp">Leading people, staying close to the code.</h2></div>
 <div class="col-r prose">
@@ -340,7 +381,7 @@ document.documentElement.setAttribute('data-js','');
 
 <section id="impact" class="sec pt0">
 <div class="wrap stack">
-<div class="sticky-label"><span class="eyebrow">02 / Selected impact</span></div>
+<div class="sticky-label">{eyebrow("impact")}</div>
 <div data-reveal><h2 class="disp">Outcomes I'm proud of</h2></div>
 <div class="grid-3">
 {''.join(f'<div data-reveal style="--d:{(k%3)*0.12:.2f}s"><article class="card impact"><div class="card-top mono"><span>{e(w)}</span><span>{k+1:02d}</span></div><div class="disp metric">{e(m)}</div><h3 class="disp">{e(t)}</h3><p>{e(b)}</p></article></div>' for k,(w,m,t,b) in enumerate(impact))}
@@ -350,7 +391,7 @@ document.documentElement.setAttribute('data-js','');
 
 <section id="experience" class="sec alt">
 <div class="wrap stack">
-<div class="sticky-label"><span class="eyebrow">03 / Career</span></div>
+<div class="sticky-label">{eyebrow("experience")}</div>
 <div data-reveal><h2 class="disp">Career path</h2></div>
 <ol class="timeline">
 <li class="tl-mark" aria-hidden="true"><span class="mono">today</span></li>
@@ -364,10 +405,10 @@ document.documentElement.setAttribute('data-js','');
 
 <section id="projects" class="sec">
 <div class="wrap stack big">
-<div class="sticky-label"><span class="eyebrow">04 / Side projects</span></div>
+<div class="sticky-label">{eyebrow("projects")}</div>
 <div class="sec-head" data-reveal>
 <div><h2 class="disp">Where I keep my hands on the keyboard</h2><p class="lede">Products and playgrounds I build after hours to try architectures, tools and AI workflows before I bring them to a team.</p></div>
-<a class="btn btn-ghost" href="https://github.com/limanartem" target="_blank" rel="noopener">{ico('GitHub', 16)}All repositories</a>
+{ext(GITHUB, ico("GitHub", 16) + "All repositories", "btn btn-ghost")}
 </div>
 {''.join(project_html(p,i) for i,p in enumerate(projects))}
 </div>
@@ -375,7 +416,7 @@ document.documentElement.setAttribute('data-js','');
 
 <section id="skills" class="sec alt">
 <div class="wrap stack">
-<div class="sticky-label"><span class="eyebrow">05 / Toolbox</span></div>
+<div class="sticky-label">{eyebrow("skills")}</div>
 <div data-reveal><h2 class="disp">Skills &amp; stack</h2></div>
 <div class="grid-3">
 {''.join(f'<div data-reveal style="--d:{(k%3)*0.1:.2f}s"><div class="card skill"><h3 class="disp">{e(t)}</h3><div class="chips">{chips(items)}</div></div></div>' for k,(t,items) in enumerate(skills))}
@@ -399,23 +440,23 @@ document.documentElement.setAttribute('data-js','');
 <section id="contact" class="sec contact">
 <div class="dotgrid flip" aria-hidden="true"></div>
 <div class="wrap stack">
-<div class="sticky-label"><span class="eyebrow">06 / Contact</span></div>
+<div class="sticky-label">{eyebrow("contact")}</div>
 <h2 class="disp huge" data-reveal style="--d:.1s">Let's talk <span class="accent">engineering.</span></h2>
 <p class="lede" data-reveal style="--d:.2s">Happy to connect about engineering leadership, eHealth, distributed systems or AI-assisted development. LinkedIn is the best way to reach me.</p>
 <div class="btns contact-btns" data-reveal style="--d:.3s">
-<a class="btn btn-primary" href="https://www.linkedin.com/in/artem-liman" target="_blank" rel="noopener">{ico('LinkedIn', 16)}Connect on LinkedIn</a>
-<a class="btn btn-ghost" href="https://github.com/limanartem" target="_blank" rel="noopener">{ico('GitHub', 16)}github.com/limanartem</a>
+{ext(LINKEDIN, ico("LinkedIn", 16) + "Connect on LinkedIn", "btn btn-primary")}
+{ext(GITHUB, ico("GitHub", 16) + "github.com/limanartem", "btn btn-ghost")}
 </div>
 <footer><span class="mono">© 2026 Artem Liman · Walldorf, Germany</span>
-<span class="foot-links"><a href="https://www.linkedin.com/in/artem-liman" target="_blank" rel="noopener" aria-label="LinkedIn">{ico('LinkedIn', 18)}</a><a href="https://github.com/limanartem" target="_blank" rel="noopener" aria-label="GitHub">{ico('GitHub', 18)}</a><a href="#top" class="mono uline">Back to top ↑</a></span></footer>
+<span class="foot-links">{ext(LINKEDIN, ico("LinkedIn", 18), label="LinkedIn")}{ext(GITHUB, ico("GitHub", 18), label="GitHub")}<a href="#top" class="mono uline">Back to top ↑</a></span></footer>
 </div>
 </section>
 </main>
 <div class="lightbox" hidden role="dialog" aria-modal="true" aria-label="Image viewer">
-<button type="button" class="lb-btn lb-close" data-lb-close aria-label="Close"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
-<button type="button" class="lb-btn lb-prev" data-lb-prev aria-label="Previous image"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></button>
+<button type="button" class="lb-btn lb-close" data-lb-close aria-label="Close">{svg("close", 20)}</button>
+<button type="button" class="lb-btn lb-prev" data-lb-prev aria-label="Previous image">{svg("prev", 22)}</button>
 <div class="lb-stage"><img src="" alt=""></div>
-<button type="button" class="lb-btn lb-next" data-lb-next aria-label="Next image"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg></button>
+<button type="button" class="lb-btn lb-next" data-lb-next aria-label="Next image">{svg("next", 22)}</button>
 <div class="lb-foot"><span class="lb-cap"></span><span class="mono lb-count"></span></div>
 </div>
 <script src="{asset("app.js")}"></script>
