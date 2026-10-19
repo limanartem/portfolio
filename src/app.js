@@ -122,9 +122,7 @@
     var hx0 = null;
     hero.addEventListener('touchstart', function (ev) { hx0 = ev.touches[0].clientX; }, { passive: true });
     hero.addEventListener('touchend', function (ev) { if (hx0 === null) return; var dx = ev.changedTouches[0].clientX - hx0; hx0 = null; if (Math.abs(dx) > 40) { hmanual = true; hgo(dx < 0 ? hi + 1 : hi - 1); } }, { passive: true });
-    hero.addEventListener('mouseenter', function () { hhover = true; });
-    hero.addEventListener('mouseleave', function () { hhover = false; });
-    if (hn > 1 && !reduce) ht = setInterval(function () { if (!hmanual && !hhover && !document.hidden) hgo(hi + 1); }, 6000);
+    if (hn > 1 && !reduce) ht = setInterval(function () { if (!hmanual && !document.hidden) hgo(hi + 1); }, 6000);
     if (hn > 1) hgo(0);
   }
 

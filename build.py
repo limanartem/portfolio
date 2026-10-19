@@ -121,10 +121,12 @@ projects = [
               img(asset('assets/shop-logo.png'),'Shop.App brand mark for web and mobile','var(--surface2)','40px')]),
  dict(id='home', name='Home.App', kind='Micro-frontend dashboard', status='Open source',
       desc='A home dashboard built as micro-frontends with React and Webpack Module Federation. Each widget is an independently built remote, loaded by a host at runtime.',
-      points=['Host + remote apps wired with Module Federation','Strongly typed remote components: types generated to @mf-types and pulled by the host at build time','Weather widget built with MUI and MUI X Charts'],
+      points=['Host + remote apps wired with Module Federation','Strongly typed remote components: types generated to @mf-types and pulled by the host at build time','Weather widget built with MUI and MUI X Charts',
+              'Runs on a Raspberry Pi 3 under Windows 10 IoT Core with a 10-inch touch screen'],
       tech=['React','TypeScript','Module Federation','Webpack','MUI','MUI X Charts'],
       repo='https://github.com/limanartem/Home.App',
-      slides=[dict(kind='mf', caption='Host loads typed remote widgets at runtime'), ph('Dashboard'), ph('Weather widget')]),
+      slides=[img(asset('assets/home-rpi.jpg'),'Debugging the dashboard on a Raspberry Pi 3 with Windows 10 IoT Core and a 10-inch touch screen','#0E1013','0px'),
+              dict(kind='mf', caption='Host loads typed remote widgets at runtime')]),
 ]
 
 skills = [
