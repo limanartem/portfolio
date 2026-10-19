@@ -30,6 +30,11 @@ def e(s): return html.escape(s, quote=True)
 ARROW = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg>'
 BULLET = '<span class="bullet" aria-hidden="true"></span>'
 
+HERO_PHOTOS = [  # order = slide order; one entry = no slider
+ ('assets/hero/hero-1.jpg', 'Portrait of Artem Liman'),
+ ('assets/hero/hero-2.jpg', 'Portrait of Artem Liman'),
+]
+
 tech_marquee = ['TypeScript','React','Java','Kotlin','Spring Boot','C# / .NET','Node.js','Kubernetes','Kafka','PostgreSQL','AWS','Azure','GraphQL','Docker','GitLab CI/CD','Claude Code']
 
 impact = [
@@ -236,7 +241,7 @@ page = f'''<!doctype html>
 <meta property="og:title" content="Artem Liman · Engineering Manager &amp; Team Lead">
 <meta property="og:description" content="20+ years building software, 10 of them leading teams. Portfolio, career and side projects.">
 <meta property="og:type" content="website">
-<meta property="og:image" content="{asset("assets/portrait.jpg")}">
+<meta property="og:image" content="{asset("assets/hero/hero-1.jpg")}">
 <link rel="icon" href="{asset("assets/favicon.svg")}" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -277,9 +282,11 @@ document.documentElement.setAttribute('data-js','');
 </header>
 
 <main>
-<section id="top" class="hero">
-<div class="dotgrid" aria-hidden="true"></div>
-<div class="wrap hero-grid">
+<section id="top" class="hero" data-hero>
+{''.join(f'<div class="hero-photo{" on" if i == 0 else ""}" style="background-image:url({asset(src)})" role="img" aria-label="{e(alt)}"></div>' for i, (src, alt) in enumerate(HERO_PHOTOS))}
+<div class="hero-shade" aria-hidden="true"></div>
+<div class="dotgrid hero-dots" aria-hidden="true"></div>
+<div class="wrap hero-wrap">
 <div class="hero-text">
 <div class="in mono badge"><span class="pulse"></span>Team Lead at CompuGroup Medical</div>
 <h1 class="disp"><span class="line"><span>Artem</span></span><span class="line l2"><span class="accent">Liman</span></span></h1>
@@ -292,21 +299,18 @@ document.documentElement.setAttribute('data-js','');
 </div>
 <div class="in d4 mono hero-meta"><span>Walldorf, Germany</span><span>EN C1 · DE B2 · UA/RU native</span></div>
 </div>
-<div class="in d2 hero-photo">
-<div class="float photo-wrap">
-<svg class="ring" aria-hidden="true" viewBox="0 0 200 200"><circle cx="100" cy="100" r="96" fill="none" stroke="var(--line2)" stroke-width="0.6" stroke-dasharray="2 5"/><circle cx="100" cy="4" r="3" fill="var(--accent)"/></svg>
-<div class="photo"><img src="{asset("assets/portrait.jpg")}" alt="Portrait of Artem Liman" width="460" height="468"></div>
-<div class="mono photo-tag"><div class="k">focus</div><div class="v">eHealth · Cloud SaaS</div></div>
 </div>
-</div>
-</div>
-<div class="wrap stats">
-<div class="in d2 stat"><span class="disp n">20<span class="accent">+</span></span><span class="l">years in software engineering</span></div>
-<div class="in d3 stat"><span class="disp n">10</span><span class="l">years leading teams</span></div>
-<div class="in d3 stat"><span class="disp n">15</span><span class="l">engineers in two teams, DE &amp; RO</span></div>
-<div class="in d4 stat"><span class="disp n">4</span><span class="l">industries: eHealth, security, life sciences, aviation</span></div>
-</div>
+{'' if len(HERO_PHOTOS) < 2 else '<div class="hctl"><span class="mono hcap">01 / ' + f'{len(HERO_PHOTOS):02d}' + '</span><div class="hdots">' + ''.join(f'<button type="button" class="hdot{" on" if i == 0 else ""}" data-i="{i}" aria-label="Photo {i + 1}"><i></i></button>' for i in range(len(HERO_PHOTOS))) + '</div></div>'}
 </section>
+
+<div class="stats-strip">
+<div class="wrap stats">
+<div class="stat"><span class="disp n">20<span class="accent">+</span></span><span class="l">years in software engineering</span></div>
+<div class="stat"><span class="disp n">10</span><span class="l">years leading teams</span></div>
+<div class="stat"><span class="disp n">15</span><span class="l">engineers in two teams, DE &amp; RO</span></div>
+<div class="stat"><span class="disp n">4</span><span class="l">industries: eHealth, security, life sciences, aviation</span></div>
+</div>
+</div>
 
 <div class="marquee" aria-label="Technologies"><div class="track disp">{''.join(f'<span>{ico(t, 26)}{e(t)}<i aria-hidden="true">◆</i></span>' for t in tech_marquee*2)}</div></div>
 
