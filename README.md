@@ -38,6 +38,7 @@ brand asset whenever an icon looks poor. To refresh everything: `python3 fetch_l
 ## Editing
 
 - Text and content: `build.py` (data lists at the top; the HTML template below them).
-- Project screenshots: drop the image in `src/assets/` and reference it as `img('assets/<file>', 'caption', bg, padding)` in that project's `slides` list.
+- Project screenshots: drop the image in `src/assets/` and reference it as `img('assets/<file>', 'caption')` in that project's `slides` list. Background and padding come from the project's `slide_bg=(bg, padding)`, or pass them to `img()` to override one slide.
+- Sections, nav and the `01 / …` labels: the `SECTIONS` list. Profile links: `LINKEDIN` / `GITHUB`. Outline icons: `ICON_PATHS`.
 - Colours, fonts, spacing: the CSS variables at the top of `src/styles.css`.
 - Preview locally: `python3 build.py && python3 -m http.server -d dist 8000`, then open `http://localhost:8000`.
