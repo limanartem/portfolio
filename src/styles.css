@@ -77,9 +77,10 @@ h2.huge{font-size:clamp(44px,8vw,112px);line-height:.95;font-weight:800;max-widt
 :root[data-theme="light"]{--shade:246,245,242}
 @media (prefers-color-scheme: light){:root:not([data-theme="dark"]){--shade:246,245,242}}
 .hero{position:relative;min-height:clamp(620px,92vh,860px);overflow:hidden;isolation:isolate;display:flex;align-items:center}
-.hero-photo{position:absolute;top:0;right:0;height:100%;aspect-ratio:1.18/1;max-width:100%;z-index:-2;opacity:0;transition:opacity 1.2s cubic-bezier(.2,.8,.2,1);background-size:cover;background-repeat:no-repeat;background-position:right 0 top 0;
+.hero-photo{position:absolute;top:0;right:0;height:100%;aspect-ratio:1.18/1;max-width:100%;z-index:-3;opacity:0;transition:opacity 1.8s cubic-bezier(.4,0,.2,1);background-size:cover;background-repeat:no-repeat;background-position:right 0 top 0;animation:drift 18s ease-in-out infinite alternate;will-change:opacity;
   -webkit-mask-image:linear-gradient(90deg,transparent 0,rgba(0,0,0,.35) 22%,#000 48%);mask-image:linear-gradient(90deg,transparent 0,rgba(0,0,0,.35) 22%,#000 48%)}
-.hero-photo.on{opacity:1;animation:drift 16s ease-in-out infinite alternate}
+.hero-photo.on{opacity:1;z-index:-2;transition:none}
+.hero-photo.out{opacity:0;z-index:-1}
 @keyframes drift{from{background-size:100%}to{background-size:106%}}
 .hero-shade{position:absolute;inset:0;z-index:-1;pointer-events:none;background:
   linear-gradient(90deg,var(--bg) 0%,var(--bg) 30%,rgba(var(--shade),.92) 42%,rgba(var(--shade),.65) 54%,rgba(var(--shade),.3) 66%,rgba(var(--shade),.06) 78%,rgba(var(--shade),0) 90%),
@@ -110,12 +111,11 @@ h1.disp{font-weight:800;font-size:clamp(52px,9vw,124px);line-height:.92;text-sha
 .in{animation:rise .9s cubic-bezier(.2,.8,.2,1) both}
 .d1{animation-delay:.25s}.d2{animation-delay:.4s}.d3{animation-delay:.55s}.d4{animation-delay:.7s}
 @media (max-width:900px){
-.hero{min-height:100svh;align-items:flex-end}
-.hero-photo{aspect-ratio:auto;width:100%;height:74svh;min-height:480px;inset:0 0 auto 0;background-size:cover;background-position:62% 0;
-  -webkit-mask-image:linear-gradient(180deg,#000 0,#000 48%,rgba(0,0,0,.55) 72%,transparent 100%);mask-image:linear-gradient(180deg,#000 0,#000 48%,rgba(0,0,0,.55) 72%,transparent 100%)}
-.hero-photo.on{animation:none}
-.hero-shade{background:linear-gradient(180deg,rgba(var(--shade),.45) 0,rgba(var(--shade),0) 16svh,rgba(var(--shade),0) 34svh,rgba(var(--shade),.55) 52svh,rgba(var(--shade),.9) 64svh,var(--bg) 74svh)}
-.hero-wrap{padding:44svh 16px 28px}
+.hero{min-height:0;align-items:flex-end}
+.hero-photo{aspect-ratio:auto;width:100%;height:54svh;min-height:380px;inset:0 0 auto 0;background-size:cover !important;background-position:58% 0;animation:none;
+  -webkit-mask-image:linear-gradient(180deg,#000 0,#000 50%,rgba(0,0,0,.5) 76%,transparent 100%);mask-image:linear-gradient(180deg,#000 0,#000 50%,rgba(0,0,0,.5) 76%,transparent 100%)}
+.hero-shade{background:linear-gradient(180deg,rgba(var(--shade),.45) 0,rgba(var(--shade),0) 12svh,rgba(var(--shade),0) 26svh,rgba(var(--shade),.5) 38svh,rgba(var(--shade),.88) 47svh,var(--bg) 54svh)}
+.hero-wrap{padding:34svh 16px 28px}
 .hero-text{gap:14px}
 h1.disp{font-size:clamp(56px,17vw,76px);line-height:.9}
 .tagline{font-size:20px}

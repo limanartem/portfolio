@@ -114,7 +114,11 @@
     var hn = hp.length, hi = 0, ht = null, hmanual = false, hhover = false;
     function hgo(i) {
       hi = ((i % hn) + hn) % hn;
-      hp.forEach(function (p, k) { p.classList.toggle('on', k === hi); });
+      hp.forEach(function (p, k) {
+        if (k === hi) { p.classList.remove('out'); p.classList.add('on'); }
+        else if (p.classList.contains('on')) { p.classList.remove('on'); p.classList.add('out'); setTimeout(function () { p.classList.remove('out'); }, 1900); }
+        else { p.classList.remove('on', 'out'); }
+      });
       hd.forEach(function (d, k) { d.classList.toggle('on', k === hi); var el = d.querySelector('i'); el.classList.remove('run'); void el.offsetWidth; if (!hmanual && !reduce) el.classList.add('run'); });
       if (hcap) hcap.textContent = (hi + 1 < 10 ? '0' : '') + (hi + 1) + ' / ' + (hn < 10 ? '0' : '') + hn;
     }
