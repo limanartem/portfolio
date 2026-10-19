@@ -267,3 +267,8 @@ html[data-js] [data-reveal][data-shown]{opacity:1;transform:none}
 *,*::before,*::after{animation:none !important;transition:none !important;scroll-behavior:auto !important}
 html[data-js] [data-reveal]{opacity:1 !important;transform:none !important}
 }
+
+/* autoplay progress inside the active dot */
+.dot{position:relative;overflow:hidden}
+.dot.on.run::after{content:"";position:absolute;inset:0;background:var(--text);opacity:.35;transform-origin:left;animation:dotrun 5s linear forwards}
+@keyframes dotrun{from{transform:scaleX(0)}to{transform:scaleX(1)}}

@@ -63,19 +63,42 @@
       dots.forEach(function (d, k) { d.classList.toggle('on', k === cur); });
       for (var k = 0; k < n; k++) items[k].setAttribute('aria-hidden', k === cur ? 'false' : 'true');
     }
-    car.querySelector('[data-prev]').addEventListener('click', function () { go(cur - 1); });
-    car.querySelector('[data-next]').addEventListener('click', function () { go(cur + 1); });
+    /* autoplay: only while visible, paused on hover/focus/touch, off after a manual choice */
+    var AUTO_MS = 5000, timer = null, visible = false, hovered = false, manual = false;
+    function tick() { if (visible && !hovered && !manual && !reduce && n > 1) go(cur + 1); }
+    function start() { if (!timer) timer = setInterval(tick, AUTO_MS); }
+    function stop() { if (timer) { clearInterval(timer); timer = null; } }
+    function restart() { stop(); start(); }
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (en) {
+        visible = en[0].isIntersecting;
+        if (visible) start(); else stop();
+      }, { threshold: 0.4 }).observe(car);
+    } else { visible = true; start(); }
+    car.addEventListener('mouseenter', function () { hovered = true; });
+    car.addEventListener('mouseleave', function () { hovered = false; });
+    car.addEventListener('focusin', function () { hovered = true; });
+    car.addEventListener('focusout', function () { hovered = false; });
+    document.addEventListener('visibilitychange', function () { if (document.hidden) stop(); else if (visible) start(); });
+    function userGo(i) { manual = true; go(i); }
+
+    car.querySelector('[data-prev]').addEventListener('click', function () { userGo(cur - 1); });
+    car.querySelector('[data-next]').addEventListener('click', function () { userGo(cur + 1); });
     car.querySelectorAll('[data-go]').forEach(function (b) {
-      b.addEventListener('click', function () { go(parseInt(b.getAttribute('data-go'), 10)); });
+      b.addEventListener('click', function () { userGo(parseInt(b.getAttribute('data-go'), 10)); });
     });
+    car.classList.add('auto');
     /* touch swipe */
     var x0 = null;
     slides.addEventListener('touchstart', function (ev) { x0 = ev.touches[0].clientX; }, { passive: true });
     slides.addEventListener('touchend', function (ev) {
       if (x0 === null) return;
       var dx = ev.changedTouches[0].clientX - x0; x0 = null;
-      if (Math.abs(dx) > 40) go(dx < 0 ? cur + 1 : cur - 1);
+      if (Math.abs(dx) > 40) userGo(dx < 0 ? cur + 1 : cur - 1);
     }, { passive: true });
+    /* progress bar under the active dot restarts on every slide change */
+    var _go = go;
+    go = function (i) { _go(i); var d = car.querySelector('.dot.on'); if (d) { d.classList.remove('run'); void d.offsetWidth; if (!manual && !reduce) d.classList.add('run'); } };
     go(0);
   });
 })();
