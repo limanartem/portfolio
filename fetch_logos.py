@@ -2,8 +2,8 @@
 """Downloads company marks into src/assets/logos/ for the career timeline.
 
 Run it once locally (python3 fetch_logos.py) and commit the result, or let the
-Pages workflow run it at build time. Existing files are never overwritten, so a
-hand-picked logo dropped into src/assets/logos/<slug>.svg|png always wins.
+Pages workflow run it at build time. Existing files are kept unless --force is
+passed, so a hand-picked logo dropped into src/assets/logos/<slug>.svg|png wins.
 
 Sources, in order: Google's favicon service (256 px), then DuckDuckGo's. Both
 return the site's icon, which is usually the brand mark. Pass --force to refetch.
@@ -66,6 +66,8 @@ def main():
                     buf = io.BytesIO(); im.save(buf, "PNG"); data = buf.getvalue(); ext = "png"
                 except Exception:
                     pass
+            for old in existing:  # --force: drop the previous file so build.py picks up the new one
+                os.remove(os.path.join(OUT, old))
             path = os.path.join(OUT, f"{slug}.{ext}")
             with open(path, "wb") as f: f.write(data)
             print(f"  {slug}: saved {os.path.basename(path)} ({len(data)} bytes) from {domain}")

@@ -111,7 +111,8 @@
   var hero = document.querySelector('[data-hero]');
   if (hero) {
     var hp = hero.querySelectorAll('.hero-photo'), hd = hero.querySelectorAll('.hdot'), hcap = hero.querySelector('.hcap');
-    var hn = hp.length, hi = 0, ht = null, hmanual = false, hhover = false;
+    var HERO_MS = 6000, hn = hp.length, hi = 0, hmanual = false;
+    hero.style.setProperty('--dot-ms', HERO_MS + 'ms');
     function hgo(i) {
       hi = ((i % hn) + hn) % hn;
       hp.forEach(function (p, k) {
@@ -126,7 +127,7 @@
     var hx0 = null;
     hero.addEventListener('touchstart', function (ev) { hx0 = ev.touches[0].clientX; }, { passive: true });
     hero.addEventListener('touchend', function (ev) { if (hx0 === null) return; var dx = ev.changedTouches[0].clientX - hx0; hx0 = null; if (Math.abs(dx) > 40) { hmanual = true; hgo(dx < 0 ? hi + 1 : hi - 1); } }, { passive: true });
-    if (hn > 1 && !reduce) ht = setInterval(function () { if (!hmanual && !document.hidden) hgo(hi + 1); }, 6000);
+    if (hn > 1 && !reduce) setInterval(function () { if (!hmanual && !document.hidden) hgo(hi + 1); }, HERO_MS);
     if (hn > 1) hgo(0);
   }
 
@@ -148,14 +149,15 @@
       if (counter) counter.textContent = pad(cur + 1) + ' / ' + pad(n);
       if (caption && captions[cur]) caption.textContent = captions[cur];
       dots.forEach(function (d, k) { d.classList.toggle('on', k === cur); });
-      for (var k = 0; k < n; k++) items[k].setAttribute('aria-hidden', k === cur ? 'false' : 'true');
+      /* inert keeps off-screen slides out of the tab order and the accessibility tree */
+      for (var k = 0; k < n; k++) items[k].toggleAttribute('inert', k !== cur);
     }
     /* autoplay: only while visible, paused on hover/focus/touch, off after a manual choice */
     var AUTO_MS = 5000, timer = null, visible = false, hovered = false, manual = false;
+    car.style.setProperty('--dot-ms', AUTO_MS + 'ms');
     function tick() { if (visible && !hovered && !manual && !reduce && n > 1) go(cur + 1); }
     function start() { if (!timer) timer = setInterval(tick, AUTO_MS); }
     function stop() { if (timer) { clearInterval(timer); timer = null; } }
-    function restart() { stop(); start(); }
     if ('IntersectionObserver' in window) {
       new IntersectionObserver(function (en) {
         visible = en[0].isIntersecting;

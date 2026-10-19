@@ -5,7 +5,8 @@ import html, os, shutil, json
 HERE = os.path.dirname(os.path.abspath(__file__))
 SRC = os.path.join(HERE, "src")
 OUT = os.path.join(HERE, "dist")
-ASSETS_SRC = os.path.join(SRC, "assets")
+# Absolute site URL, used where crawlers need full URLs (og:image). The Pages workflow passes it in.
+SITE_URL = os.environ.get("SITE_URL", "https://limanartem.github.io/portfolio/").rstrip("/") + "/"
 if os.path.isdir(OUT): shutil.rmtree(OUT)
 os.makedirs(os.path.join(OUT, "assets"), exist_ok=True)
 
@@ -82,8 +83,7 @@ earlier = [
  ('leonorm','2001 – 2005','Ukraine','Software Developer','Leonorm','Internal projects for a national standards organisation: database design and Windows Forms applications.','.NET 1.1 · C# · VB.NET · Caché'),
 ]
 
-def img(src, caption, bg='var(--surface)', pad='20px'): return dict(kind='img', src=src, caption=caption, bg=bg, pad=pad)
-def ph(label): return dict(kind='ph', label=label, caption='Placeholder — ' + label.lower())
+def img(src, caption, bg='var(--surface)', pad='20px'): return dict(kind='img', src=asset(src), caption=caption, bg=bg, pad=pad)
 
 projects = [
  dict(id='planner', name='Schiftmanager', kind='Resource & shift planning SaaS', status='Private beta',
@@ -95,10 +95,10 @@ projects = [
               'GraphQL API on Firebase, React + TypeScript front end, OpenAI API, CI/CD on GitHub Actions'],
       tech=['React','TypeScript','Firebase','GraphQL','GitHub Actions','OpenAI API'],
       live=('https://beta.schiftmanager.de','beta.schiftmanager.de'), private=True,
-      slides=[img(asset('assets/schift-login.jpg'),'Sign in with Google or email','#0D0F14','0px'),
-              img(asset('assets/schift-schedule.jpg'),'Weekly schedule grouped by position, with hours per employee and labour cost per day','#F4F5F8','0px'),
-              img(asset('assets/schift-coverage.jpg'),'Coverage view: staffing minimums per position, health score and understaffing alerts','#0D0F14','0px'),
-              img(asset('assets/schift-dashboard.jpg'),'Dashboard: today’s shifts, coverage status, pending requests and quick actions','#0D0F14','0px')]),
+      slides=[img('assets/schift-login.jpg','Sign in with Google or email','#0D0F14','0px'),
+              img('assets/schift-schedule.jpg','Weekly schedule grouped by position, with hours per employee and labour cost per day','#F4F5F8','0px'),
+              img('assets/schift-coverage.jpg','Coverage view: staffing minimums per position, health score and understaffing alerts','#0D0F14','0px'),
+              img('assets/schift-dashboard.jpg','Dashboard: today’s shifts, coverage status, pending requests and quick actions','#0D0F14','0px')]),
  dict(id='training', name='Training App', kind='Mobile fitness app', status='Prototype',
       desc='A mobile fitness app that builds a workout plan around the equipment you actually have: photograph your training space and the AI generates a weekly programme in under a minute, no account needed.',
       points=['Equipment recognition from photos: snap your home gym and get a plan that uses only what is there',
@@ -106,9 +106,9 @@ projects = [
               'Per-exercise detail: target muscles, how-to, pro tips and common mistakes',
               'Localised UI (English, Ukrainian); zero-friction onboarding without sign-up'],
       tech=['Mobile','TypeScript','OpenAI API'], private=True,
-      slides=[img(asset('assets/training-1.jpg'),'Onboarding and equipment scan: photos of the training space feed the plan generator','#0E1013','0px'),
-              img(asset('assets/training-2.jpg'),'Generated weekly programme and exercise detail with today’s target','#0E1013','0px'),
-              img(asset('assets/training-3.jpg'),'Plan ready: days per week, experience level and goal','#0E1013','0px')]),
+      slides=[img('assets/training-1.jpg','Onboarding and equipment scan: photos of the training space feed the plan generator','#0E1013','0px'),
+              img('assets/training-2.jpg','Generated weekly programme and exercise detail with today’s target','#0E1013','0px'),
+              img('assets/training-3.jpg','Plan ready: days per week, experience level and goal','#0E1013','0px')]),
  dict(id='shop', name='Shop.App', kind='Distributed systems playground', status='Open source',
       desc='A web shop used as a playground for integrating distributed components: polyglot microservices, message-driven order processing and web and mobile clients, all running with a single docker-compose up.',
       points=['Orders flow through RabbitMQ workers (pending → payment → dispatch) with status updates back to the UI',
@@ -117,15 +117,15 @@ projects = [
               'npm-workspaces monorepo with shared packages, CI on GitHub Actions'],
       tech=['React','Redux','MUI','React Native / Expo','Node.js','Express','GraphQL','.NET 8','RabbitMQ','MongoDB','MySQL','PostgreSQL','Redis','Docker'],
       repo='https://github.com/limanartem/Shop.App',
-      slides=[img(asset('assets/shop-architecture.png'),'Architecture: public and private subnets, services and message broker','#FFFFFF','14px'),
-              img(asset('assets/shop-logo.png'),'Shop.App brand mark for web and mobile','var(--surface2)','40px')]),
+      slides=[img('assets/shop-architecture.png','Architecture: public and private subnets, services and message broker','#FFFFFF','14px'),
+              img('assets/shop-logo.png','Shop.App brand mark for web and mobile','var(--surface2)','40px')]),
  dict(id='home', name='Home.App', kind='Micro-frontend dashboard', status='Open source',
       desc='A home dashboard built as micro-frontends with React and Webpack Module Federation. Each widget is an independently built remote, loaded by a host at runtime.',
       points=['Host + remote apps wired with Module Federation','Strongly typed remote components: types generated to @mf-types and pulled by the host at build time','Weather widget built with MUI and MUI X Charts',
               'Runs on a Raspberry Pi 3 under Windows 10 IoT Core with a 10-inch touch screen'],
       tech=['React','TypeScript','Module Federation','Webpack','MUI','MUI X Charts'],
       repo='https://github.com/limanartem/Home.App',
-      slides=[img(asset('assets/home-rpi.jpg'),'Debugging the dashboard on a Raspberry Pi 3 with Windows 10 IoT Core and a 10-inch touch screen','#0E1013','0px'),
+      slides=[img('assets/home-rpi.jpg','Debugging the dashboard on a Raspberry Pi 3 with Windows 10 IoT Core and a 10-inch touch screen','#0E1013','0px'),
               dict(kind='mf', caption='Host loads typed remote widgets at runtime')]),
 ]
 
@@ -173,11 +173,8 @@ def bullets(items, cls='pt'): return ''.join(f'<li class="{cls}">{BULLET}<span>{
 def slide_html(s):
     if s['kind']=='img':
         return f'<div class="slide"><div class="slide-img" style="background:{s["bg"]};padding:{s["pad"]}"><button type="button" class="zoom" aria-label="View full size: {e(s["caption"])}"><img src="{s["src"]}" alt="{e(s["caption"])}" loading="lazy"><span class="zoom-hint" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3M11 8v6M8 11h6"/></svg></span></button></div></div>'
-    if s['kind']=='ph':
-        return f'''<div class="slide"><div class="slide-ph"><div class="ph-box">
-<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="m21 16-5-5-9 9"/></svg>
-<span class="mono ph-label">[SCREENSHOT: {e(s["label"])}]</span><span class="ph-sub">Drop a real screenshot here</span></div></div></div>'''
-    return '''<div class="slide"><div class="slide-mf">
+    if s['kind']=='mf':
+        return '''<div class="slide"><div class="slide-mf">
 <div class="mf-host"><div class="mono mf-k">host</div><div class="disp mf-name">home.app.host</div><div class="mono mf-k">Webpack Module Federation</div></div>
 <div class="mf-link" aria-hidden="true"></div>
 <div class="mf-grid">
@@ -186,6 +183,7 @@ def slide_html(s):
 <div class="mf-remote ghost"><div class="mono mf-k">remote</div><div class="mf-r">next widget</div></div>
 </div>
 <div class="mono mf-foot">typed remotes via @module-federation/typescript → @mf-types</div></div></div>'''
+    raise ValueError(f"unknown slide kind: {s['kind']!r}")
 
 def project_html(p, i):
     rev = ' reverse' if i % 2 else ''
@@ -243,7 +241,9 @@ page = f'''<!doctype html>
 <meta property="og:title" content="Artem Liman · Engineering Manager &amp; Team Lead">
 <meta property="og:description" content="20+ years building software, 10 of them leading teams. Portfolio, career and side projects.">
 <meta property="og:type" content="website">
-<meta property="og:image" content="{asset("assets/hero/hero-1.jpg")}">
+<meta property="og:image" content="{SITE_URL}{asset(HERO_PHOTOS[0][0])}">
+<meta property="og:url" content="{SITE_URL}">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="{asset("assets/favicon.svg")}" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
