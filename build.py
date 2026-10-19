@@ -134,7 +134,7 @@ projects = [
               img('assets/schift-schedule.jpg','Weekly schedule grouped by position, with hours per employee and labour cost per day','#F4F5F8','0px'),
               img('assets/schift-coverage.jpg','Coverage view: staffing minimums per position, health score and understaffing alerts','#0D0F14','0px'),
               img('assets/schift-dashboard.jpg','Dashboard: today’s shifts, coverage status, pending requests and quick actions','#0D0F14','0px')]),
- dict(id='training', name='Training App', kind='Mobile fitness app', status='Android beta',
+ dict(id='training', name='My Workout', kind='Mobile fitness app', status='Android beta',
       desc='A mobile fitness app that builds a workout plan around the equipment you actually have: photograph your training space and an OpenAI model works out the equipment and generates a weekly programme, no account needed.',
       points=['Equipment recognition from photos: snap your home gym and get a plan that uses only what is there',
               'AI-generated weekly programme with sets, reps and rest, drawn from a curated exercise catalogue and validated against your equipment',
@@ -159,7 +159,7 @@ projects = [
  dict(id='home', name='Home.App', kind='Micro-frontend dashboard', status='Prototype',
       desc='A wall-mounted home dashboard, being rebuilt as micro-frontends. The original Home Control Panel (2017) was a UWP app on a Raspberry Pi 3 with a 10-inch touch screen, showing the family calendar, weather, room climate and live tram departures. Home.App reworks it with React and Webpack Module Federation, so each widget is an independently built remote that a host loads at runtime; weather is the first remote.',
       points=['Original panel: Google Calendar, date and time, weather forecast, room temperature and humidity from a DHT22 sensor, and real-time RNV departures for nearby stops',
-              'Original panel: a UWP app on Windows 10 IoT Core, switching between light and dark themes from an ambient light sensor, mounted in a picture frame on the wall',
+              'Original panel: a C# UWP app on Windows 10 IoT Core, switching between light and dark themes from an ambient light sensor, mounted in a picture frame on the wall',
               'Rewrite: host and remote wired with Module Federation; strongly typed remotes via @mf-types pulled in at dev build time',
               'Weather remote: Open-Meteo forecast with geolocation fallback, three widget sizes, hourly chart in MUI X Charts, Jest tests'],
       tech=['React','TypeScript','Module Federation','Webpack','MUI','MUI X Charts','Jest'],
@@ -169,6 +169,8 @@ projects = [
               img('assets/home-ui.jpg','Original Home Control Panel (2017): Google Calendar, weather, temperature and humidity from a room sensor, next RNV departures from two nearby stops'),
               img('assets/home-rpi.jpg','Debugging the dashboard on a Raspberry Pi 3 with Windows 10 IoT Core and a 10-inch touch screen'),
               img('assets/home-parts.jpg','Parts: Raspberry Pi 3, 10-inch touch display, VESA mount, standoffs and a temperature/humidity sensor'),
+              img('assets/home-backplate.jpg','Back plate: the Raspberry Pi 3 wired to the DHT22 temperature/humidity sensor and a light sensor'),
+              img('assets/home-side.jpg','Side view: display, Pi and back plate stacked on brass standoffs over a VESA wall mount'),
               dict(kind='mf', caption='Host loads typed remote widgets at runtime')]),
 ]
 
