@@ -134,7 +134,15 @@ skills = [
 
 langs = [('Ukrainian','Native',100),('Russian','Native',100),('English','C1',85),('German','B2',68)]
 
-def chips(items): return ''.join(f'<span class="chip">{e(t)}</span>' for t in items)
+ICONS = json.load(open(os.path.join(SRC, "icons.json")))
+def ico(name, size=14, cls=""):
+    """Inline monochrome brand mark (Simple Icons, CC0); empty string when the brand has none."""
+    p = ICONS.get(name)
+    if not p: return ""
+    vb, d = (p["vb"], p["d"]) if isinstance(p, dict) else ("0 0 24 24", p)
+    return f'<svg class="ico {cls}" width="{size}" height="{size}" viewBox="{vb}" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" d="{d}"/></svg>'
+def chips(items, icons=False):
+    return ''.join(f'<span class="chip">{ico(t) if icons else ""}{e(t)}</span>' for t in items)
 def bullets(items, cls='pt'): return ''.join(f'<li class="{cls}">{BULLET}<span>{e(p)}</span></li>' for p in items)
 
 def slide_html(s):
@@ -158,7 +166,7 @@ def project_html(p, i):
     rev = ' reverse' if i % 2 else ''
     links = ''
     if p.get('live'): links += f'<a class="btn btn-primary sm" href="{p["live"][0]}" target="_blank" rel="noopener">{e(p["live"][1])}{ARROW}</a>'
-    if p.get('repo'): links += f'<a class="btn btn-ghost sm" href="{p["repo"]}" target="_blank" rel="noopener">View on GitHub{ARROW}</a>'
+    if p.get('repo'): links += f'<a class="btn btn-ghost sm" href="{p["repo"]}" target="_blank" rel="noopener">{ico('GitHub', 15)}View on GitHub</a>'
     if p.get('private'): links += '<span class="mono private"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>Private repository</span>'
     dots = ''.join(f'<button type="button" class="dothit" data-go="{k}" aria-label="Go to slide {k+1}"><span class="dot{" on" if k==0 else ""}"></span></button>' for k in range(len(p['slides'])))
     captions = json.dumps([s['caption'] for s in p['slides']])
@@ -177,7 +185,7 @@ def project_html(p, i):
 <h3 class="disp">{e(p['name'])}</h3>
 <p class="pr-desc">{e(p['desc'])}</p>
 <ul class="pts">{bullets(p['points'], 'pt small')}</ul>
-<div class="chips">{chips(p['tech'])}</div>
+<div class="chips">{chips(p['tech'], icons=True)}</div>
 <div class="pr-links">{links}</div>
 </div>
 </article>'''
@@ -251,8 +259,8 @@ document.documentElement.setAttribute('data-js','');
 <p class="in d1 disp tagline">Engineering Manager &amp; Team Lead who still reads the diff.</p>
 <p class="in d2 lede">20+ years building software, 10 of them leading teams. Today I run two product teams at CompuGroup Medical shipping CGM Praxis, a cloud SaaS for medical practices in Germany.</p>
 <div class="in d3 btns">
-<a class="btn btn-primary" href="https://www.linkedin.com/in/artem-liman" target="_blank" rel="noopener">LinkedIn{ARROW}</a>
-<a class="btn btn-ghost" href="https://github.com/limanartem" target="_blank" rel="noopener">GitHub{ARROW}</a>
+<a class="btn btn-primary" href="https://www.linkedin.com/in/artem-liman" target="_blank" rel="noopener">{ico('LinkedIn', 16)}LinkedIn</a>
+<a class="btn btn-ghost" href="https://github.com/limanartem" target="_blank" rel="noopener">{ico('GitHub', 16)}GitHub</a>
 <a class="btn btn-ghost" href="#projects">Side projects</a>
 </div>
 <div class="in d4 mono hero-meta"><span>Walldorf, Germany</span><span>EN C1 · DE B2 · UA/RU native</span></div>
@@ -273,7 +281,7 @@ document.documentElement.setAttribute('data-js','');
 </div>
 </section>
 
-<div class="marquee" aria-label="Technologies"><div class="track disp">{''.join(f'<span>{e(t)}<i aria-hidden="true">◆</i></span>' for t in tech_marquee*2)}</div></div>
+<div class="marquee" aria-label="Technologies"><div class="track disp">{''.join(f'<span>{ico(t, 26)}{e(t)}<i aria-hidden="true">◆</i></span>' for t in tech_marquee*2)}</div></div>
 
 <section id="about" class="sec">
 <div class="wrap two-col">
@@ -317,7 +325,7 @@ document.documentElement.setAttribute('data-js','');
 <div class="wrap stack big">
 <div class="sec-head" data-reveal>
 <div><span class="eyebrow">04 — Side projects</span><h2 class="disp">Where I keep my hands on the keyboard</h2><p class="lede">Products and playgrounds I build after hours — to try architectures, tools and AI workflows before I bring them to a team.</p></div>
-<a class="btn btn-ghost" href="https://github.com/limanartem" target="_blank" rel="noopener">All repositories{ARROW}</a>
+<a class="btn btn-ghost" href="https://github.com/limanartem" target="_blank" rel="noopener">{ico('GitHub', 16)}All repositories</a>
 </div>
 {''.join(project_html(p,i) for i,p in enumerate(projects))}
 </div>
@@ -352,10 +360,11 @@ document.documentElement.setAttribute('data-js','');
 <h2 class="disp huge" data-reveal style="--d:.1s">Let's talk <span class="accent">engineering.</span></h2>
 <p class="lede" data-reveal style="--d:.2s">Happy to connect about engineering leadership, eHealth, distributed systems or AI-assisted development. LinkedIn is the best way to reach me.</p>
 <div class="btns" data-reveal style="--d:.3s">
-<a class="btn btn-primary" href="https://www.linkedin.com/in/artem-liman" target="_blank" rel="noopener">Connect on LinkedIn{ARROW}</a>
-<a class="btn btn-ghost" href="https://github.com/limanartem" target="_blank" rel="noopener">github.com/limanartem</a>
+<a class="btn btn-primary" href="https://www.linkedin.com/in/artem-liman" target="_blank" rel="noopener">{ico('LinkedIn', 16)}Connect on LinkedIn</a>
+<a class="btn btn-ghost" href="https://github.com/limanartem" target="_blank" rel="noopener">{ico('GitHub', 16)}github.com/limanartem</a>
 </div>
-<footer><span class="mono">© 2026 Artem Liman · Walldorf, Germany</span><a href="#top" class="mono uline">Back to top ↑</a></footer>
+<footer><span class="mono">© 2026 Artem Liman · Walldorf, Germany</span>
+<span class="foot-links"><a href="https://www.linkedin.com/in/artem-liman" target="_blank" rel="noopener" aria-label="LinkedIn">{ico('LinkedIn', 18)}</a><a href="https://github.com/limanartem" target="_blank" rel="noopener" aria-label="GitHub">{ico('GitHub', 18)}</a><a href="#top" class="mono uline">Back to top ↑</a></span></footer>
 </div>
 </section>
 </main>

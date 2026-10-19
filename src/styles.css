@@ -272,3 +272,15 @@ html[data-js] [data-reveal]{opacity:1 !important;transform:none !important}
 .dot{position:relative;overflow:hidden}
 .dot.on.run::after{content:"";position:absolute;inset:0;background:var(--text);opacity:.35;transform-origin:left;animation:dotrun 5s linear forwards}
 @keyframes dotrun{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+
+/* brand marks (monochrome, inherit text colour) */
+.ico{flex:0 0 auto;display:block}
+.chip{display:inline-flex;align-items:center;gap:6px}
+.chip .ico{width:13px;height:13px;opacity:.85}
+.track span .ico{width:24px;height:24px;margin-right:-30px;opacity:.7}
+.track span{gap:48px}
+.btn .ico{opacity:.9}
+.btn:hover .ico{transform:none}
+.foot-links{display:flex;align-items:center;gap:18px}
+.foot-links a{color:var(--muted);display:grid;place-items:center;min-width:28px;min-height:28px;transition:color .2s}
+.foot-links a:hover{color:var(--accent)}
