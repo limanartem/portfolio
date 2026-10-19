@@ -156,22 +156,20 @@ projects = [
       repo='https://github.com/limanartem/Shop.App',
       slides=[img('assets/shop-architecture.png','Architecture: public and private subnets, services and message broker','#FFFFFF','14px'),
               img('assets/shop-logo.png','Shop.App brand mark for web and mobile','var(--surface2)','40px')]),
- dict(id='home', name='Home.App', kind='Micro-frontend dashboard', status='Prototype',
-      desc='A wall-mounted home dashboard, being rebuilt as micro-frontends. The original Home Control Panel (2017) was a UWP app on a Raspberry Pi 3 with a 10-inch touch screen, showing the family calendar, weather, room climate and live tram departures. Home.App reworks it with React and Webpack Module Federation, so each widget is an independently built remote that a host loads at runtime; weather is the first remote.',
-      points=['Original panel: Google Calendar, date and time, weather forecast, room temperature and humidity from a DHT22 sensor, and real-time RNV departures for nearby stops',
-              'Original panel: a C# UWP app on Windows 10 IoT Core, switching between light and dark themes from an ambient light sensor, mounted in a picture frame on the wall',
-              'Rewrite: host and remote wired with Module Federation; strongly typed remotes via @mf-types pulled in at dev build time',
-              'Weather remote: Open-Meteo forecast with geolocation fallback, three widget sizes, hourly chart in MUI X Charts, Jest tests'],
-      tech=['React','TypeScript','Module Federation','Webpack','MUI','MUI X Charts','Jest'],
-      repo='https://github.com/limanartem/Home.App',
+ dict(id='home', name='Home Control Panel', kind='Wall-mounted smart home panel', status='2017 build',
+      desc='A wall-mounted family dashboard: a C# UWP app on a Raspberry Pi 3 running Windows 10 IoT Core, with a 10-inch touch screen in a picture frame. It started as a full-screen family calendar and grew into a panel for the day ahead: time, weather, room climate and the next departures from nearby stops.',
+      points=['Widgets: clock, weather forecast with hourly outlook, Google Calendar, room temperature and humidity, and real-time public transport departures for nearby stops',
+              'Room climate from a DHT22 sensor; an ambient light sensor switches the UI between light and dark themes',
+              'Hardware built by hand: Pi, sensors and display stacked on a custom back plate with brass standoffs over a VESA wall mount'],
+      tech=['C#','UWP','Windows 10 IoT Core','Raspberry Pi'],
+      repo='https://github.com/limanartem/HomeControlPanel',
       slide_bg=('#0E1013', '0px'),
-      slides=[img('assets/home-wall.jpg','The original panel, wall-mounted in a picture frame: clock, weather, room climate, calendar and live tram departures'),
+      slides=[img('assets/home-wall.jpg','The panel, wall-mounted in a picture frame: clock, weather, room climate, calendar and live tram departures'),
               img('assets/home-screen.jpg','Home Panel screenshot (2017): clock, weather with hourly forecast, room temperature and humidity, Google Calendar and real-time departures for a nearby station'),
               img('assets/home-rpi.jpg','Debugging the dashboard on a Raspberry Pi 3 with Windows 10 IoT Core and a 10-inch touch screen'),
               img('assets/home-parts.jpg','Parts: Raspberry Pi 3, 10-inch touch display, VESA mount, standoffs and a temperature/humidity sensor'),
               img('assets/home-backplate.jpg','Back plate: the Raspberry Pi 3 wired to the DHT22 temperature/humidity sensor and a light sensor'),
-              img('assets/home-side.jpg','Side view: display, Pi and back plate stacked on brass standoffs over a VESA wall mount'),
-              dict(kind='mf', caption='Host loads typed remote widgets at runtime')]),
+              img('assets/home-side.jpg','Side view: display, Pi and back plate stacked on brass standoffs over a VESA wall mount')]),
 ]
 
 skills = [
@@ -219,16 +217,6 @@ def slide_html(s, default_bg=('var(--surface)', '20px')):
     if s['kind']=='img':
         bg, pad = s['bg'] or default_bg[0], s['pad'] or default_bg[1]
         return f'<div class="slide"><div class="slide-img" style="background:{bg};padding:{pad}"><button type="button" class="zoom" aria-label="View full size: {e(s["caption"])}"><img src="{s["src"]}" alt="{e(s["caption"])}" loading="lazy"><span class="zoom-hint" aria-hidden="true">{svg("zoom", 16)}</span></button></div></div>'
-    if s['kind']=='mf':
-        return '''<div class="slide"><div class="slide-mf">
-<div class="mf-host"><div class="mono mf-k">host</div><div class="disp mf-name">home.app.host</div><div class="mono mf-k">Webpack Module Federation</div></div>
-<div class="mf-link" aria-hidden="true"></div>
-<div class="mf-grid">
-<div class="mf-remote"><div class="mono mf-k">remote</div><div class="mf-r">weather</div><div class="mono mf-k">MUI · X Charts</div></div>
-<div class="mf-remote ghost"><div class="mono mf-k">remote</div><div class="mf-r">next widget</div></div>
-<div class="mf-remote ghost"><div class="mono mf-k">remote</div><div class="mf-r">next widget</div></div>
-</div>
-<div class="mono mf-foot">typed remotes via @module-federation/typescript → @mf-types</div></div></div>'''
     raise ValueError(f"unknown slide kind: {s['kind']!r}")
 
 def project_html(p, i):

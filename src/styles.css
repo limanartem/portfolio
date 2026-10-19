@@ -232,15 +232,6 @@ details[open] .plus{transform:rotate(45deg)}
 .slide{flex:0 0 100%;height:100%}
 .slide-img{width:100%;height:100%;display:grid;place-items:center}
 .slide-img img{max-width:100%;max-height:100%;object-fit:contain;border-radius:10px}
-.slide-mf{width:100%;height:100%;padding:clamp(18px,3vw,36px);display:flex;flex-direction:column;justify-content:center;gap:18px;background-image:radial-gradient(var(--dotgrid) 1px,transparent 1px);background-size:18px 18px}
-.mf-host{align-self:center;border:1px solid var(--accent);border-radius:14px;padding:14px 22px;background:var(--bg);text-align:center}
-.mf-k{font-size:11px;color:var(--faint)}.mf-name{font-weight:700;font-size:18px}
-.mf-link{align-self:center;width:2px;height:28px;background:repeating-linear-gradient(var(--line2) 0 4px,transparent 4px 8px)}
-.mf-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
-.mf-remote{border:1px solid var(--line2);border-radius:14px;padding:12px;background:var(--surface2);text-align:center}
-.mf-remote .mf-r{font-weight:600;font-size:15px}
-.mf-remote.ghost{border-style:dashed;background:transparent;color:var(--faint)}.mf-remote.ghost .mf-r{font-weight:400}
-.mf-foot{text-align:center;font-size:12px;color:var(--faint)}
 .car-ui{position:absolute;left:14px;right:14px;bottom:14px;display:flex;justify-content:space-between;align-items:center;gap:10px;pointer-events:none}
 .counter{font-size:12px;background:var(--glass);border:1px solid var(--line);border-radius:999px;padding:6px 12px;backdrop-filter:blur(6px)}
 .car-btns{display:flex;gap:8px;pointer-events:auto}
