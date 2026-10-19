@@ -24,7 +24,11 @@ jobs:
           python-version: "3.12"
       - run: pip install pillow
       - run: python fetch_logos.py   # fills src/assets/logos/ for any company without a committed logo
+      - id: pages
+        uses: actions/configure-pages@v5
       - run: python build.py
+        env:
+          SITE_URL: ${{ steps.pages.outputs.base_url }}
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
