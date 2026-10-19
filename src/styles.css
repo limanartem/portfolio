@@ -220,9 +220,12 @@ details[open] .plus{transform:rotate(45deg)}
 .sec-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:20px}
 .sec-head>div{display:flex;flex-direction:column;gap:14px;max-width:720px}
 .sec-head .eyebrow,.sec-head h2{margin:0}
-.project{display:flex;flex-wrap:wrap;align-items:center;gap:clamp(28px,4vw,64px)}
-.project.reverse{flex-direction:row-reverse}
-.pr-media{flex:999 1 560px;min-width:0;display:flex;flex-direction:column;gap:14px}
+/* heading comes first in the source; side by side it sits beside the carousel, stacked it sits above it */
+.project{display:grid;grid-template-columns:minmax(0,1fr) 360px;grid-template-areas:"media ." "media head" "media body" "media .";grid-template-rows:1fr auto auto 1fr;column-gap:clamp(28px,4vw,64px);row-gap:18px}
+.project.reverse{grid-template-columns:360px minmax(0,1fr);grid-template-areas:". media" "head media" "body media" ". media"}
+@media (max-width:1040px){.project,.project.reverse{grid-template-columns:minmax(0,1fr);grid-template-areas:"head" "media" "body";grid-template-rows:auto;row-gap:22px}}
+.pr-head{grid-area:head;display:flex;flex-direction:column;gap:18px}
+.pr-media{grid-area:media;align-self:center;min-width:0;display:flex;flex-direction:column;gap:14px}
 .carousel{position:relative;aspect-ratio:16/10;border-radius:24px;overflow:hidden;border:1px solid var(--line);background:var(--surface)}
 .slides{display:flex;height:100%;transition:transform .6s cubic-bezier(.7,0,.2,1)}
 .slide{flex:0 0 100%;height:100%}
@@ -248,13 +251,13 @@ details[open] .plus{transform:rotate(45deg)}
 .dothit{display:grid;place-items:center;min-width:26px;height:44px;background:none;border:0;padding:0 4px;cursor:pointer}
 .dot{display:block;width:8px;height:8px;border-radius:999px;background:var(--line2);transition:width .35s,background .35s}
 .dot.on{width:26px;background:var(--accent)}
-.pr-text{flex:1 1 360px;min-width:0;display:flex;flex-direction:column;gap:18px}
+.pr-body{grid-area:body;min-width:0;display:flex;flex-direction:column;gap:18px}
 .pr-meta{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
 .status{font-size:12px;color:var(--accent);background:var(--accent-soft);border-radius:999px;padding:4px 10px;font-weight:500}
 .kind{font-size:12px;color:var(--faint)}
-.pr-text h3{font-size:clamp(30px,3.2vw,44px);font-weight:700;line-height:1.02}
+.pr-head h3{font-size:clamp(30px,3.2vw,44px);font-weight:700;line-height:1.02}
 .pr-desc{color:var(--text2);text-wrap:pretty}
-.pr-text .pts{gap:10px}
+.pr-body .pts{gap:10px}
 .pr-links{display:flex;flex-wrap:wrap;gap:10px;margin-top:6px}
 .private{display:inline-flex;align-items:center;gap:8px;min-height:44px;font-size:13px;color:var(--faint)}
 
