@@ -141,8 +141,11 @@ def ico(name, size=14, cls=""):
     if not p: return ""
     vb, d = (p["vb"], p["d"]) if isinstance(p, dict) else ("0 0 24 24", p)
     return f'<svg class="ico {cls}" width="{size}" height="{size}" viewBox="{vb}" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" d="{d}"/></svg>'
+# Where brand marks appear on chips: "all" = every chip that has one; "projects" = only side-project chips; "none" = text only.
+CHIP_ICONS = "all"
 def chips(items, icons=False):
-    return ''.join(f'<span class="chip">{ico(t) if icons else ""}{e(t)}</span>' for t in items)
+    use = CHIP_ICONS == "all" or (CHIP_ICONS == "projects" and icons)
+    return ''.join(f'<span class="chip">{ico(t) if use else ""}{e(t)}</span>' for t in items)
 def bullets(items, cls='pt'): return ''.join(f'<li class="{cls}">{BULLET}<span>{e(p)}</span></li>' for p in items)
 
 def slide_html(s):
