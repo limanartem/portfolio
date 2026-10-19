@@ -166,7 +166,7 @@ projects = [
       repo='https://github.com/limanartem/Home.App',
       slide_bg=('#0E1013', '0px'),
       slides=[img('assets/home-wall.jpg','The original panel, wall-mounted in a picture frame: clock, weather, room climate, calendar and live tram departures'),
-              img('assets/home-ui.jpg','Original Home Control Panel (2017): Google Calendar, weather, temperature and humidity from a room sensor, next RNV departures from two nearby stops'),
+              img('assets/home-screen.jpg','Home Panel screenshot (2017): clock, weather with hourly forecast, room temperature and humidity, Google Calendar and real-time departures for a nearby station'),
               img('assets/home-rpi.jpg','Debugging the dashboard on a Raspberry Pi 3 with Windows 10 IoT Core and a 10-inch touch screen'),
               img('assets/home-parts.jpg','Parts: Raspberry Pi 3, 10-inch touch display, VESA mount, standoffs and a temperature/humidity sensor'),
               img('assets/home-backplate.jpg','Back plate: the Raspberry Pi 3 wired to the DHT22 temperature/humidity sensor and a light sensor'),
