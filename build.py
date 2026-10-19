@@ -150,7 +150,7 @@ def bullets(items, cls='pt'): return ''.join(f'<li class="{cls}">{BULLET}<span>{
 
 def slide_html(s):
     if s['kind']=='img':
-        return f'<div class="slide"><div class="slide-img" style="background:{s["bg"]};padding:{s["pad"]}"><img src="{s["src"]}" alt="{e(s["caption"])}" loading="lazy"></div></div>'
+        return f'<div class="slide"><div class="slide-img" style="background:{s["bg"]};padding:{s["pad"]}"><button type="button" class="zoom" aria-label="View full size: {e(s["caption"])}"><img src="{s["src"]}" alt="{e(s["caption"])}" loading="lazy"><span class="zoom-hint" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3M11 8v6M8 11h6"/></svg></span></button></div></div>'
     if s['kind']=='ph':
         return f'''<div class="slide"><div class="slide-ph"><div class="ph-box">
 <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="m21 16-5-5-9 9"/></svg>
@@ -246,9 +246,18 @@ document.documentElement.setAttribute('data-js','');
 <button type="button" class="segbtn" data-theme-set="light" title="Light" aria-label="Light theme"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
 <button type="button" class="segbtn" data-theme-set="dark" title="Dark" aria-label="Dark theme"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button>
 </div>
-<a class="btn btn-primary sm" href="#contact">Contact</a>
+<a class="btn btn-primary sm nav-contact" href="#contact">Contact</a>
+<button type="button" class="burger" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
+<svg class="i-open" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+<svg class="i-close" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+</button>
 </div>
 </nav>
+<div id="mobile-menu" class="mobile-menu" hidden>
+<a href="#about">About</a><a href="#impact">Impact</a><a href="#experience">Career</a><a href="#projects">Projects</a><a href="#skills">Skills</a>
+<a href="#contact" class="btn btn-primary">Contact</a>
+<div class="mm-links"><a href="https://www.linkedin.com/in/artem-liman" target="_blank" rel="noopener">{ico('LinkedIn', 16)}LinkedIn</a><a href="https://github.com/limanartem" target="_blank" rel="noopener">{ico('GitHub', 16)}GitHub</a></div>
+</div>
 <div class="progress" aria-hidden="true"></div>
 </header>
 
@@ -371,6 +380,13 @@ document.documentElement.setAttribute('data-js','');
 </div>
 </section>
 </main>
+<div class="lightbox" hidden role="dialog" aria-modal="true" aria-label="Image viewer">
+<button type="button" class="lb-btn lb-close" data-lb-close aria-label="Close"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+<button type="button" class="lb-btn lb-prev" data-lb-prev aria-label="Previous image"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></button>
+<div class="lb-stage"><img src="" alt=""></div>
+<button type="button" class="lb-btn lb-next" data-lb-next aria-label="Next image"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg></button>
+<div class="lb-foot"><span class="lb-cap"></span><span class="mono lb-count"></span></div>
+</div>
 <script src="{asset("app.js")}"></script>
 </body>
 </html>
