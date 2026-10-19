@@ -121,54 +121,55 @@ earlier = [
 def img(src, caption, bg=None, pad=None): return dict(kind='img', src=asset(src), caption=caption, bg=bg, pad=pad)
 
 projects = [
- dict(id='planner', name='Schiftmanager', kind='Resource & shift planning SaaS', status='Private beta',
-      desc='Staff scheduling and management for small businesses such as medical practices: shifts, availability, time off, timesheets and payroll export in one place, with AI assistance built in. Running as a private beta.',
-      points=['Coverage analysis: per-position staffing minimums, a weekly health score and understaffing alerts',
-              'Week, month and day schedules grouped by position, with labour cost per day and one-click publishing',
-              'Time off, leave balances, timesheets, open shifts, announcements, payroll export and compliance checks',
-              'Multi-tenant orgs, Google sign-in, public holidays per region, light and dark themes',
-              'GraphQL API on Firebase, React + TypeScript front end, OpenAI API, CI/CD on GitHub Actions'],
-      tech=['React','TypeScript','Firebase','GraphQL','GitHub Actions','OpenAI API'],
+ dict(id='planner', name='Schift Manager', kind='Resource & shift planning SaaS', status='Private beta',
+      desc='Staff scheduling and management for small teams, from medical practices to retail and hospitality: shifts, availability, time off, timesheets and payroll export in one place, in English and German. Running as an invite-only private beta.',
+      points=['Coverage analysis: per-position staffing minimums, a coverage health score and understaffing alerts',
+              'Week, month and day schedules grouped by position, with labour cost per day, budget alerts and weekly publishing with history',
+              'Time off, leave balances, timesheets, open shifts and shift trading, announcements, payroll export and working-time compliance checks',
+              'Multi-location orgs with role-based access, Google sign-in and MFA, Stripe subscription tiers, public holidays per region',
+              'Built spec-first with a Claude Code agent pipeline (design, implement, verify, audit), with Vitest and Playwright suites gating CI/CD on GitHub Actions'],
+      tech=['React','TypeScript','MUI','Firebase','Zod','Stripe','Playwright','GitHub Actions','Claude Code'],
       live=('https://beta.schiftmanager.de','beta.schiftmanager.de'), private=True,
       slides=[img('assets/schift-login.jpg','Sign in with Google or email','#0D0F14','0px'),
               img('assets/schift-schedule.jpg','Weekly schedule grouped by position, with hours per employee and labour cost per day','#F4F5F8','0px'),
               img('assets/schift-coverage.jpg','Coverage view: staffing minimums per position, health score and understaffing alerts','#0D0F14','0px'),
               img('assets/schift-dashboard.jpg','Dashboard: today’s shifts, coverage status, pending requests and quick actions','#0D0F14','0px')]),
- dict(id='training', name='Training App', kind='Mobile fitness app', status='Prototype',
-      desc='A mobile fitness app that builds a workout plan around the equipment you actually have: photograph your training space and the AI generates a weekly programme in under a minute, no account needed.',
+ dict(id='training', name='My Workout', kind='Mobile fitness app', status='Android beta',
+      desc='A mobile fitness app that builds a workout plan around the equipment you actually have: photograph your training space and an OpenAI model works out the equipment and generates a weekly programme, no account needed.',
       points=['Equipment recognition from photos: snap your home gym and get a plan that uses only what is there',
-              'AI-generated weekly programme with sets, reps and rest; plans adapt as you progress',
+              'AI-generated weekly programme with sets, reps and rest, drawn from a curated exercise catalogue and validated against your equipment',
               'Per-exercise detail: target muscles, how-to, pro tips and common mistakes',
-              'Localised UI (English, Ukrainian); zero-friction onboarding without sign-up'],
-      tech=['Mobile','TypeScript','OpenAI API'], private=True,
+              'Localised UI and exercise content (English, German, Ukrainian); anonymous sign-in, so onboarding needs no account',
+              'Expo app plus Firebase Cloud Functions in a TypeScript monorepo; Android builds go to testers through Firebase App Distribution'],
+      tech=['React Native / Expo','TypeScript','Firebase','OpenAI API','Zod','Vitest','GitHub Actions'], private=True,
       slide_bg=('#0E1013', '0px'),  # default for slides that don't set their own
       slides=[img('assets/training-1.jpg','Onboarding and equipment scan: photos of the training space feed the plan generator'),
               img('assets/training-2.jpg','Generated weekly programme and exercise detail with today’s target'),
               img('assets/training-3.jpg','Plan ready: days per week, experience level and goal')]),
  dict(id='shop', name='Shop.App', kind='Distributed systems playground', status='Open source',
-      desc='A web shop used as a playground for integrating distributed components: polyglot microservices, message-driven order processing and web and mobile clients, all running with a single docker-compose up.',
-      points=['Orders flow through RabbitMQ workers (pending → payment → dispatch) with status updates back to the UI',
-              'Catalog API in .NET 8 minimal APIs; orders and cart APIs in Node.js with REST and GraphQL',
-              'Auth via SuperTokens; MongoDB, MySQL, PostgreSQL and Redis behind a private network',
-              'npm-workspaces monorepo with shared packages, CI on GitHub Actions'],
-      tech=['React','Redux','MUI','React Native / Expo','Node.js','Express','GraphQL','.NET 8','RabbitMQ','MongoDB','MySQL','PostgreSQL','Redis','Docker'],
+      desc='A web shop used as a playground for integrating distributed components: polyglot microservices, message-driven order processing and web and mobile clients, with the backend and web client running from a single docker-compose up.',
+      points=['Orders move through pending, payment and dispatch workers on RabbitMQ; status changes reach web and mobile in real time over GraphQL subscriptions',
+              'Catalog API in .NET 8 minimal APIs with EF Core; orders API in Node.js and Express with both REST and GraphQL',
+              'Auth via SuperTokens on PostgreSQL; MongoDB for orders, MySQL for the catalog, Redis caching; data stores and workers on a private network',
+              'npm-workspaces monorepo with shared packages; Jest and xUnit tests in CI on GitHub Actions'],
+      tech=['React','Redux','MUI','React Native / Expo','TypeScript','Node.js','Express','GraphQL','.NET 8','RabbitMQ','MongoDB','MySQL','PostgreSQL','Redis','Docker'],
       repo='https://github.com/limanartem/Shop.App',
       slides=[img('assets/shop-architecture.png','Architecture: public and private subnets, services and message broker','#FFFFFF','14px'),
               img('assets/shop-logo.png','Shop.App brand mark for web and mobile','var(--surface2)','40px')]),
- dict(id='home', name='Home.App', kind='Micro-frontend dashboard', status='Open source',
-      desc='A wall-mounted home dashboard: calendar, weather, room climate and live public transport departures on a 10-inch touch screen driven by a Raspberry Pi. Built as micro-frontends with React and Webpack Module Federation, so each widget is an independently built remote loaded by a host at runtime.',
-      points=['Widgets for Google Calendar, weather, a room temperature/humidity sensor and next RNV tram departures for nearby stops',
-              'Runs on a Raspberry Pi 3 under Windows 10 IoT Core, mounted in a picture frame on the wall',
-              'Host + remote apps wired with Module Federation; strongly typed remotes via @mf-types pulled in at build time',
-              'Weather widget built with MUI and MUI X Charts'],
-      tech=['React','TypeScript','Module Federation','Webpack','MUI','MUI X Charts'],
-      repo='https://github.com/limanartem/Home.App',
+ dict(id='home', name='Home Control Panel', kind='Wall-mounted smart home panel', status='2017 build',
+      desc='A wall-mounted family dashboard: a C# UWP app on a Raspberry Pi 3 running Windows 10 IoT Core, with a 10-inch touch screen in a picture frame. It started as a full-screen family calendar and grew into a panel for the day ahead: time, weather, room climate and the next departures from nearby stops.',
+      points=['Widgets: clock, weather forecast with hourly outlook, Google Calendar, room temperature and humidity, and real-time public transport departures for nearby stops',
+              'Room climate from a DHT22 sensor; an ambient light sensor switches the UI between light and dark themes',
+              'Hardware built by hand: Pi, sensors and display stacked on a custom back plate with brass standoffs over a VESA wall mount'],
+      tech=['C#','UWP','Windows 10 IoT Core','Raspberry Pi'],
+      repo='https://github.com/limanartem/HomeControlPanel',
       slide_bg=('#0E1013', '0px'),
-      slides=[img('assets/home-wall.jpg','The finished panel, wall-mounted in a picture frame: clock, weather, room climate, calendar and live tram departures'),
-              img('assets/home-ui.jpg','Home Control Panel: Google Calendar, weather, temperature and humidity from a room sensor, next RNV departures from two nearby stops'),
+      slides=[img('assets/home-wall.jpg','The panel, wall-mounted in a picture frame: clock, weather, room climate, calendar and live tram departures'),
+              img('assets/home-screen.jpg','Home Panel screenshot (2017): clock, weather with hourly forecast, room temperature and humidity, Google Calendar and real-time departures for a nearby station'),
               img('assets/home-rpi.jpg','Debugging the dashboard on a Raspberry Pi 3 with Windows 10 IoT Core and a 10-inch touch screen'),
               img('assets/home-parts.jpg','Parts: Raspberry Pi 3, 10-inch touch display, VESA mount, standoffs and a temperature/humidity sensor'),
-              dict(kind='mf', caption='Host loads typed remote widgets at runtime')]),
+              img('assets/home-backplate.jpg','Back plate: the Raspberry Pi 3 wired to the DHT22 temperature/humidity sensor and a light sensor'),
+              img('assets/home-side.jpg','Side view: display, Pi and back plate stacked on brass standoffs over a VESA wall mount')]),
 ]
 
 skills = [
@@ -216,16 +217,6 @@ def slide_html(s, default_bg=('var(--surface)', '20px')):
     if s['kind']=='img':
         bg, pad = s['bg'] or default_bg[0], s['pad'] or default_bg[1]
         return f'<div class="slide"><div class="slide-img" style="background:{bg};padding:{pad}"><button type="button" class="zoom" aria-label="View full size: {e(s["caption"])}"><img src="{s["src"]}" alt="{e(s["caption"])}" loading="lazy"><span class="zoom-hint" aria-hidden="true">{svg("zoom", 16)}</span></button></div></div>'
-    if s['kind']=='mf':
-        return '''<div class="slide"><div class="slide-mf">
-<div class="mf-host"><div class="mono mf-k">host</div><div class="disp mf-name">home.app.host</div><div class="mono mf-k">Webpack Module Federation</div></div>
-<div class="mf-link" aria-hidden="true"></div>
-<div class="mf-grid">
-<div class="mf-remote"><div class="mono mf-k">remote</div><div class="mf-r">weather</div><div class="mono mf-k">MUI · X Charts</div></div>
-<div class="mf-remote ghost"><div class="mono mf-k">remote</div><div class="mf-r">next widget</div></div>
-<div class="mf-remote ghost"><div class="mono mf-k">remote</div><div class="mf-r">next widget</div></div>
-</div>
-<div class="mono mf-foot">typed remotes via @module-federation/typescript → @mf-types</div></div></div>'''
     raise ValueError(f"unknown slide kind: {s['kind']!r}")
 
 def project_html(p, i):
