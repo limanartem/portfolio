@@ -28,6 +28,13 @@ and stays cached. Only `index.html` itself keeps a fixed name, and GitHub Pages 
 
 For a custom domain, enter it in the Pages settings and add a file `src/CNAME` containing the domain, so it survives every deploy.
 
+## Company logos
+
+`fetch_logos.py` downloads a mark for each employer into `src/assets/logos/` (from the company's site icon),
+and the Pages workflow runs it on every build, so logos appear without any manual step. A file you place there
+yourself (`<slug>.svg` or `.png`; slugs are listed in the script) is never overwritten, so swap in a proper
+brand asset whenever an icon looks poor. To refresh everything: `python3 fetch_logos.py --force`.
+
 ## Editing
 
 - Text and content: `build.py` (data lists at the top; the HTML template below them).

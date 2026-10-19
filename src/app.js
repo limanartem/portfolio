@@ -21,7 +21,7 @@
   /* ---------- compact sticky bar after scrolling ---------- */
   var top = document.querySelector('.top');
   if (top) {
-    var onTop = function () { top.classList.toggle('compact', window.scrollY > 48); };
+    var onTop = function () { var on = window.scrollY > 48; top.classList.toggle('compact', on); root.style.setProperty('--bar-h', on ? '54px' : '66px'); };
     window.addEventListener('scroll', onTop, { passive: true }); onTop();
   }
 

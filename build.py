@@ -33,16 +33,16 @@ BULLET = '<span class="bullet" aria-hidden="true"></span>'
 tech_marquee = ['TypeScript','React','Java','Kotlin','Spring Boot','C# / .NET','Node.js','Kubernetes','Kafka','PostgreSQL','AWS','Azure','GraphQL','Docker','GitLab CI/CD','Claude Code']
 
 impact = [
- ('CompuGroup Medical','MVP → Live','Took CGM Praxis into production','Led two teams taking a multi-tenant cloud SaaS for medical practices from MVP to production — live since 2025 with several dozen practices onboarded. Owned the TI/gematik modules: VSDM, KIM, ePA, eAU, eArztbrief and e-signature.'),
+ ('CompuGroup Medical','MVP → Live','Took CGM Praxis into production','Led two teams taking a multi-tenant cloud SaaS for medical practices from MVP to production. Live since 2025 with several dozen practices onboarded. Owned the TI/gematik modules: VSDM, KIM, ePA, eAU, eArztbrief and e-signature.'),
  ('Avira / Gen','~200k accounts','Zero-knowledge backend migration','Moved Avira Password Manager onto Gen’s shared backend. Zero-knowledge encryption ruled out bulk re-encryption, so we designed a migration that moved each account safely on its next login over several months.'),
- ('inhive','Cloud eHealth platform','Built a medical data platform from the ground up','Led development of inhive’s own eHealth platform — web portal, taxonomy API and developer portal — bringing data from on-premise source systems into the cloud securely, with real-time access, cross-system reporting and fully automated CI/CD.'),
- ('Roche Diagnostics','SQL Server → SAP HANA','Re-platformed a biospecimen system','Architecture and development lead on a LIMS release that moved storage to SAP HANA and updated availability and replication — ready for larger datasets, more complex studies and globally distributed samples.'),
- ('Lufthansa Group','3 airlines, 1 platform','Public web platform at airline scale','Led a Scrum team on the group’s public-facing web platform, white-labeled for Lufthansa, SWISS and Austrian Airlines — from requirements to end-to-end delivery and third-party API coordination.'),
- ('Genentech · Merck · Bayer','Global pharma R&D','Architecture advisory in regulated life sciences','Assessed as-is architectures, designed target architectures and ran RFI/RFP vendor selections — including a LIMS for Genentech and a big-data and genome-analysis platform for Merck R&D.'),
+ ('inhive','Cloud eHealth platform','Built a medical data platform from the ground up','Led development of inhive’s own eHealth platform (web portal, taxonomy API and developer portal), bringing data from on-premise source systems into the cloud securely, with real-time access, cross-system reporting and fully automated CI/CD.'),
+ ('Roche Diagnostics','SQL Server → SAP HANA','Re-platformed a biospecimen system','Architecture and development lead on a LIMS release that moved storage to SAP HANA and updated availability and replication, ready for larger datasets, more complex studies and globally distributed samples.'),
+ ('Lufthansa Group','3 airlines, 1 platform','Public web platform at airline scale','Led a Scrum team on the group’s public-facing web platform, white-labeled for Lufthansa, SWISS and Austrian Airlines, from requirements to end-to-end delivery and third-party API coordination.'),
+ ('Genentech · Merck · Bayer','Global pharma R&D','Architecture advisory in regulated life sciences','Assessed as-is architectures, designed target architectures and ran RFI/RFP vendor selections, including a LIMS for Genentech and a big-data and genome-analysis platform for Merck R&D.'),
 ]
 
 jobs = [
- dict(period='Jun 2024 — Present', company='CompuGroup Medical', place='Germany', role='Team Leader · CGM Praxis',
+ dict(logo='cgm', period='Jun 2024 – Present', company='CompuGroup Medical', place='Germany', role='Team Leader · CGM Praxis',
       scope='Two teams, 15 engineers in Germany and Romania, 5 direct reports. Multi-tenant cloud SaaS for medical practices.',
       points=['Took CGM Praxis from MVP to production; responsible for TI/gematik modules and TI vendor coordination.',
               'Introduced automated engineering and product KPIs with team dashboards.',
@@ -51,7 +51,7 @@ jobs = [
               'Hire and onboard engineers, run reviews, goal setting, promotions and calibration; helped introduce CoderPad for screening.',
               'Built agent skills that check implementations against requirements and an AI reviewer for AI-generated code.'],
       tech=['TypeScript','React','Java','Kotlin','Spring Boot','PostgreSQL','Kubernetes','Kafka','GitLab CI/CD','Azure DevOps']),
- dict(period='Jun 2020 — Feb 2024', company='Avira / NortonLifeLock / Gen', place='Germany', role='Engineering Manager · Browser-Based Applications',
+ dict(logo=['avira', 'gen'], period='Jun 2020 – Feb 2024', company='Avira / NortonLifeLock / Gen', place='Germany', role='Engineering Manager · Browser-Based Applications',
       scope='Team of 7–9 engineers (iOS, Android, web, AWS backend) in Germany and Romania on Avira Password Manager and next-generation products on a unified platform.',
       points=['Led the migration of ~200k Password Manager accounts to Gen’s shared backend under zero-knowledge constraints.',
               'Shipped Avira Security desktop integration, new onboarding, master-password recovery and file attachments.',
@@ -59,22 +59,22 @@ jobs = [
               'Won first place in the company hackathon with a Figma-to-code pipeline generating per-platform design assets.',
               'Took over AWS backend and DevOps when needed; set engineering standards, code reviews and CI across web, mobile and backend.'],
       tech=['TypeScript','React','Node.js','C# / .NET Core','Kotlin','Swift','Python','AWS','DynamoDB','Docker','Jenkins','A/B testing']),
- dict(period='May 2012 — May 2020', company='inhive Group', place='Germany', role='Lead Engineer · Team Lead · Architect',
+ dict(logo='inhive', period='May 2012 – May 2020', company='inhive Group', place='Germany', role='Lead Engineer · Team Lead · Architect',
       scope='Lead and architect roles on healthcare, pharma and aviation projects for Roche, Lufthansa Group, Genentech, Merck and Bayer.',
       points=['Lufthansa Group: led a Scrum team on the white-labeled public web platform for Lufthansa, SWISS and Austrian Airlines.',
               'Roche Diagnostics: architecture and development lead on a biospecimen-management (LIMS) release moving to SAP HANA.',
-              'Led inhive’s own eHealth platform — web portal, taxonomy API, developer portal — on Azure and SAP HANA Cloud Platform.',
+              'Led inhive’s own eHealth platform (web portal, taxonomy API, developer portal) on Azure and SAP HANA Cloud Platform.',
               'Roche: led the team that took a Confluence-based research collaboration platform from prototype to production.',
               'Genentech, Merck, Bayer: architecture assessments, target architectures, RFI/RFP vendor selection and distributed PoCs.'],
       tech=['.NET','ASP.NET Core','C#','Java','Azure','SAP HANA','SQL Server','Cosmos DB','MongoDB','Atlassian SDK']),
 ]
 
 earlier = [
- ('2012','Germany','Senior .NET Developer','Verivox','Germany’s largest independent energy and telecom comparison portal: PDF sign-up features and a standalone importer that brought provider tariffs into the online system.','C# · ASP.NET · SQL Server · NUnit · TDD'),
- ('2009 – 2011','Ukraine','Team Lead / .NET Tech Lead','N-iX','Led 6 developers and 2 QA engineers as Scrum Master for Manodo (Sweden): a web portal to monitor and control energy use across large smart-building estates. Core features, database design, specs and planning.','Silverlight · C# · Prism · WCF · SQL Server'),
- ('2007 – 2008','Ukraine','Senior .NET Developer / Team Lead','Edvantis','Led 3–7 developers within a 30-person team building property tax and appraisal software for True Automation (US); owned core logic and the billing module.','.NET 3.5 · C# · SQL Server · Crystal Reports'),
- ('2005 – 2007','Ukraine','Senior .NET Developer','UKEESS Software House','Server-side development for Cabconnect’s taxi payment platform: portals for drivers, card holders and cab companies on in-house business and UI frameworks.','.NET 2.0 · C# · ASP.NET · SQL Server'),
- ('2001 – 2005','Ukraine','Software Developer','Leonorm','Internal projects for a national standards organisation: database design and Windows Forms applications.','.NET 1.1 · C# · VB.NET · Caché'),
+ ('verivox','2012','Germany','Senior .NET Developer','Verivox','Germany’s largest independent energy and telecom comparison portal: PDF sign-up features and a standalone importer that brought provider tariffs into the online system.','C# · ASP.NET · SQL Server · NUnit · TDD'),
+ ('nix','2009 – 2011','Ukraine','Team Lead / .NET Tech Lead','N-iX','Led 6 developers and 2 QA engineers as Scrum Master for Manodo (Sweden): a web portal to monitor and control energy use across large smart-building estates. Core features, database design, specs and planning.','Silverlight · C# · Prism · WCF · SQL Server'),
+ ('edvantis','2007 – 2008','Ukraine','Senior .NET Developer / Team Lead','Edvantis','Led 3–7 developers within a 30-person team building property tax and appraisal software for True Automation (US); owned core logic and the billing module.','.NET 3.5 · C# · SQL Server · Crystal Reports'),
+ ('ukeess','2005 – 2007','Ukraine','Senior .NET Developer','UKEESS Software House','Server-side development for Cabconnect’s taxi payment platform: portals for drivers, card holders and cab companies on in-house business and UI frameworks.','.NET 2.0 · C# · ASP.NET · SQL Server'),
+ ('leonorm','2001 – 2005','Ukraine','Software Developer','Leonorm','Internal projects for a national standards organisation: database design and Windows Forms applications.','.NET 1.1 · C# · VB.NET · Caché'),
 ]
 
 def img(src, caption, bg='var(--surface)', pad='20px'): return dict(kind='img', src=src, caption=caption, bg=bg, pad=pad)
@@ -82,7 +82,7 @@ def ph(label): return dict(kind='ph', label=label, caption='Placeholder — ' + 
 
 projects = [
  dict(id='planner', name='Schiftmanager', kind='Resource & shift planning SaaS', status='Private beta',
-      desc='Staff scheduling and management for small businesses such as medical practices: shifts, availability, time off, timesheets and payroll export in one place — with AI assistance built in. Running as a private beta.',
+      desc='Staff scheduling and management for small businesses such as medical practices: shifts, availability, time off, timesheets and payroll export in one place, with AI assistance built in. Running as a private beta.',
       points=['Coverage analysis: per-position staffing minimums, a weekly health score and understaffing alerts',
               'Week, month and day schedules grouped by position, with labour cost per day and one-click publishing',
               'Time off, leave balances, timesheets, open shifts, announcements, payroll export and compliance checks',
@@ -90,13 +90,13 @@ projects = [
               'GraphQL API on Firebase, React + TypeScript front end, OpenAI API, CI/CD on GitHub Actions'],
       tech=['React','TypeScript','Firebase','GraphQL','GitHub Actions','OpenAI API'],
       live=('https://beta.schiftmanager.de','beta.schiftmanager.de'), private=True,
-      slides=[img(asset('assets/schift-schedule.jpg'),'Weekly schedule grouped by position, with hours per employee and labour cost per day','#F4F5F8','0px'),
+      slides=[img(asset('assets/schift-login.jpg'),'Sign in with Google or email','#0D0F14','0px'),
+              img(asset('assets/schift-schedule.jpg'),'Weekly schedule grouped by position, with hours per employee and labour cost per day','#F4F5F8','0px'),
               img(asset('assets/schift-coverage.jpg'),'Coverage view: staffing minimums per position, health score and understaffing alerts','#0D0F14','0px'),
-              img(asset('assets/schift-dashboard.jpg'),'Dashboard: today’s shifts, coverage status, pending requests and quick actions','#0D0F14','0px'),
-              img(asset('assets/schift-login.jpg'),'Sign in with Google or email','#0D0F14','0px')]),
+              img(asset('assets/schift-dashboard.jpg'),'Dashboard: today’s shifts, coverage status, pending requests and quick actions','#0D0F14','0px')]),
  dict(id='training', name='Training App', kind='Mobile fitness app', status='Prototype',
-      desc='A mobile fitness app that builds a workout plan around the equipment you actually have: photograph your training space and the AI generates a weekly programme in under a minute — no account needed.',
-      points=['Equipment recognition from photos: snap your home gym, get a plan that uses only what is there',
+      desc='A mobile fitness app that builds a workout plan around the equipment you actually have: photograph your training space and the AI generates a weekly programme in under a minute, no account needed.',
+      points=['Equipment recognition from photos: snap your home gym and get a plan that uses only what is there',
               'AI-generated weekly programme with sets, reps and rest; plans adapt as you progress',
               'Per-exercise detail: target muscles, how-to, pro tips and common mistakes',
               'Localised UI (English, Ukrainian); zero-friction onboarding without sign-up'],
@@ -105,18 +105,17 @@ projects = [
               img(asset('assets/training-2.jpg'),'Generated weekly programme and exercise detail with today’s target','#0E1013','0px'),
               img(asset('assets/training-3.jpg'),'Plan ready: days per week, experience level and goal','#0E1013','0px')]),
  dict(id='shop', name='Shop.App', kind='Distributed systems playground', status='Open source',
-      desc='A web shop used as a playground for integrating distributed components: polyglot microservices, message-driven order processing and web + mobile clients — all running with one docker-compose up.',
+      desc='A web shop used as a playground for integrating distributed components: polyglot microservices, message-driven order processing and web and mobile clients, all running with a single docker-compose up.',
       points=['Orders flow through RabbitMQ workers (pending → payment → dispatch) with status updates back to the UI',
               'Catalog API in .NET 8 minimal APIs; orders and cart APIs in Node.js with REST and GraphQL',
               'Auth via SuperTokens; MongoDB, MySQL, PostgreSQL and Redis behind a private network',
-              'npm-workspaces monorepo with shared packages, CI on GitHub Actions; AI-generated product images'],
+              'npm-workspaces monorepo with shared packages, CI on GitHub Actions'],
       tech=['React','Redux','MUI','React Native / Expo','Node.js','Express','GraphQL','.NET 8','RabbitMQ','MongoDB','MySQL','PostgreSQL','Redis','Docker'],
       repo='https://github.com/limanartem/Shop.App',
       slides=[img(asset('assets/shop-architecture.png'),'Architecture: public and private subnets, services and message broker','#FFFFFF','14px'),
-              img(asset('assets/shop-products.jpg'),'Catalog with AI-generated product images','#18191F','0px'),
               img(asset('assets/shop-logo.png'),'Shop.App brand mark for web and mobile','var(--surface2)','40px')]),
  dict(id='home', name='Home.App', kind='Micro-frontend dashboard', status='Open source',
-      desc='A home dashboard built as micro-frontends with React and Webpack Module Federation — each widget is an independently built remote, loaded by a host at runtime.',
+      desc='A home dashboard built as micro-frontends with React and Webpack Module Federation. Each widget is an independently built remote, loaded by a host at runtime.',
       points=['Host + remote apps wired with Module Federation','Strongly typed remote components: types generated to @mf-types and pulled by the host at build time','Weather widget built with MUI and MUI X Charts'],
       tech=['React','TypeScript','Module Federation','Webpack','MUI','MUI X Charts'],
       repo='https://github.com/limanartem/Home.App',
@@ -143,6 +142,22 @@ def ico(name, size=14, cls=""):
     return f'<svg class="ico {cls}" width="{size}" height="{size}" viewBox="{vb}" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" d="{d}"/></svg>'
 # Where brand marks appear on chips: "all" = every chip that has one; "projects" = only side-project chips; "none" = text only.
 CHIP_ICONS = "all"
+ICON_ALIAS = {'ASP.NET': '.NET', 'ASP.NET Core': '.NET', '.NET 3.5': '.NET', '.NET 2.0': '.NET', '.NET 1.1': '.NET', 'VB.NET': '.NET', 'NUnit': '.NET', 'C# / .NET Core': '.NET', 'Prism': '.NET', 'WCF': '.NET'}
+for _a, _b in ICON_ALIAS.items(): ICONS.setdefault(_a, ICONS.get(_b))
+
+MONOGRAM = {'cgm': 'CGM', 'avira': 'AV', 'gen': 'GEN', 'inhive': 'IH', 'verivox': 'VX', 'nix': 'NX', 'edvantis': 'ED', 'ukeess': 'UK', 'leonorm': 'LN'}
+def logo(slugs, name):
+    """Company mark(s): src/assets/logos/<slug>.svg|png when present, else a monogram. Several slugs = several tiles."""
+    out = []
+    for slug in ([slugs] if isinstance(slugs, str) else slugs):
+        for ext in ("svg", "png"):
+            rel = f"assets/logos/{slug}.{ext}"
+            if os.path.exists(os.path.join(SRC, rel)):
+                out.append(f'<span class="clogo"><img src="{asset(rel)}" alt="" loading="lazy"></span>'); break
+        else:
+            out.append(f'<span class="clogo mono" aria-hidden="true">{e(MONOGRAM.get(slug, name[:2].upper()))}</span>')
+    return f'<span class="clogos">{"".join(out)}</span>'
+
 def chips(items, icons=False):
     use = CHIP_ICONS == "all" or (CHIP_ICONS == "projects" and icons)
     return ''.join(f'<span class="chip">{ico(t) if use else ""}{e(t)}</span>' for t in items)
@@ -195,19 +210,19 @@ def project_html(p, i):
 
 def job_html(j, current=False):
     return f'''<li class="tl-item{' current' if current else ''}" data-reveal>
-<div class="tl-left"><span class="mono period">{e(j['period'])}</span><span class="disp company">{e(j['company'])}</span><span class="place">{e(j['place'])}</span></div>
+<div class="tl-left"><span class="mono period">{e(j['period'])}</span><span class="company-row">{logo(j['logo'], j['company'])}<span class="disp company">{e(j['company'])}</span></span><span class="place">{e(j['place'])}</span></div>
 <div class="tl-dot" aria-hidden="true"></div>
 <div class="tl-body"><h3 class="disp">{e(j['role'])}</h3><p class="scope">{e(j['scope'])}</p>
 <ul class="pts">{bullets(j['points'])}</ul><div class="chips">{chips(j['tech'])}</div></div>
 </li>'''
 
-def early_html(p, pl, r, c, b, t):
+def early_html(slug, p, pl, r, c, b, t):
     return f'''<li class="tl-item compact" data-reveal>
-<div class="tl-left"><span class="mono period">{e(p)}</span><span class="disp company">{e(c)}</span><span class="place">{e(pl)}</span></div>
+<div class="tl-left"><span class="mono period">{e(p)}</span><span class="company-row">{logo(slug, c)}<span class="disp company">{e(c)}</span></span><span class="place">{e(pl)}</span></div>
 <div class="tl-dot" aria-hidden="true"></div>
 <details class="tl-body">
 <summary><span class="disp role">{e(r)}</span><span class="plus" aria-hidden="true">+</span></summary>
-<p class="scope">{e(b)}</p><span class="mono tech">{e(t)}</span>
+<p class="scope">{e(b)}</p><div class="chips">{chips(t.split(' · '))}</div>
 </details>
 </li>'''
 
@@ -216,9 +231,9 @@ page = f'''<!doctype html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Artem Liman — Engineering Manager &amp; Team Lead</title>
-<meta name="description" content="Artem Liman — Engineering Manager and Team Lead in eHealth. 20+ years in software, 10 leading teams. Portfolio, career and side projects.">
-<meta property="og:title" content="Artem Liman — Engineering Manager &amp; Team Lead">
+<title>Artem Liman · Engineering Manager &amp; Team Lead</title>
+<meta name="description" content="Artem Liman, Engineering Manager and Team Lead in eHealth. 20+ years in software, 10 leading teams. Portfolio, career and side projects.">
+<meta property="og:title" content="Artem Liman · Engineering Manager &amp; Team Lead">
 <meta property="og:description" content="20+ years building software, 10 of them leading teams. Portfolio, career and side projects.">
 <meta property="og:type" content="website">
 <meta property="og:image" content="{asset("assets/portrait.jpg")}">
@@ -270,7 +285,7 @@ document.documentElement.setAttribute('data-js','');
 <h1 class="disp"><span class="line"><span>Artem</span></span><span class="line l2"><span class="accent">Liman</span></span></h1>
 <p class="in d1 disp tagline">Engineering Manager &amp; Team Lead who still reads the diff.</p>
 <p class="in d2 lede">20+ years building software, 10 of them leading teams. Today I run two product teams at CompuGroup Medical shipping CGM Praxis, a cloud SaaS for medical practices in Germany.</p>
-<div class="in d3 btns">
+<div class="in d3 btns hero-btns">
 <a class="btn btn-primary" href="https://www.linkedin.com/in/artem-liman" target="_blank" rel="noopener">{ico('LinkedIn', 16)}LinkedIn</a>
 <a class="btn btn-ghost" href="https://github.com/limanartem" target="_blank" rel="noopener">{ico('GitHub', 16)}GitHub</a>
 <a class="btn btn-ghost" href="#projects">Side projects</a>
@@ -296,24 +311,26 @@ document.documentElement.setAttribute('data-js','');
 <div class="marquee" aria-label="Technologies"><div class="track disp">{''.join(f'<span>{ico(t, 26)}{e(t)}<i aria-hidden="true">◆</i></span>' for t in tech_marquee*2)}</div></div>
 
 <section id="about" class="sec">
+<div class="wrap"><div class="sticky-label"><span class="eyebrow">01 / About</span></div></div>
 <div class="wrap two-col">
-<div class="col-l" data-reveal="left"><span class="eyebrow">01 — About</span><h2 class="disp">Leading people, staying close to the code.</h2></div>
+<div class="col-l" data-reveal="left"><h2 class="disp">Leading people, staying close to the code.</h2></div>
 <div class="col-r prose">
-<p data-reveal>At <strong>CompuGroup Medical</strong> I lead two cross-functional product teams — 15 engineers across Germany and Romania — building <strong>CGM Praxis</strong>, a multi-tenant cloud SaaS for medical practices with deep TI/gematik integration. I own delivery, engineering practices and people development for both teams.</p>
+<p data-reveal>At <strong>CompuGroup Medical</strong> I lead two cross-functional product teams, 15 engineers across Germany and Romania, building <strong>CGM Praxis</strong>, a multi-tenant cloud SaaS for medical practices with deep TI/gematik integration. I own delivery, engineering practices and people development for both teams.</p>
 <p data-reveal style="--d:.1s">Before that I managed the <strong>Avira Password Manager</strong> team through its integration into Gen, and spent eight years at <strong>inhive</strong> as lead engineer, team lead and architect on healthcare, life sciences and aviation projects for Roche, Lufthansa Group, Genentech, Merck and Bayer.</p>
-<p data-reveal style="--d:.2s">I care about teams that ship steadily and engineers who keep growing. I stay hands-on — architecture reviews, CI/CD, automation — and use side projects to try new tools and AI workflows before bringing them to a team.</p>
-<div class="facts">
-<div class="fact" data-reveal="scale" style="--d:.1s"><div class="mono k">Domain</div><div class="v">eHealth · TI/gematik</div></div>
-<div class="fact" data-reveal="scale" style="--d:.2s"><div class="mono k">Also shipped in</div><div class="v">Security · Life sciences · Aviation</div></div>
-<div class="fact" data-reveal="scale" style="--d:.3s"><div class="mono k">Works in</div><div class="v">Regulated, distributed teams</div></div>
-</div>
+<p data-reveal style="--d:.2s">I care about teams that ship steadily and engineers who keep growing. I stay hands-on with architecture reviews, CI/CD and automation, and use side projects to try new tools and AI workflows before bringing them to a team.</p>
+<dl class="facts" data-reveal>
+<div class="fact"><dt class="mono">Domain</dt><dd>eHealth · TI/gematik</dd></div>
+<div class="fact"><dt class="mono">Also shipped in</dt><dd>Security · Life sciences · Aviation</dd></div>
+<div class="fact"><dt class="mono">Works in</dt><dd>Regulated, distributed teams</dd></div>
+</dl>
 </div>
 </div>
 </section>
 
 <section id="impact" class="sec pt0">
 <div class="wrap stack">
-<div data-reveal><span class="eyebrow">02 — Selected impact</span><h2 class="disp">Outcomes I'm proud of</h2></div>
+<div class="sticky-label"><span class="eyebrow">02 / Selected impact</span></div>
+<div data-reveal><h2 class="disp">Outcomes I'm proud of</h2></div>
 <div class="grid-3">
 {''.join(f'<div data-reveal style="--d:{(k%3)*0.12:.2f}s"><article class="card impact"><div class="card-top mono"><span>{e(w)}</span><span>{k+1:02d}</span></div><div class="disp metric">{e(m)}</div><h3 class="disp">{e(t)}</h3><p>{e(b)}</p></article></div>' for k,(w,m,t,b) in enumerate(impact))}
 </div>
@@ -322,7 +339,8 @@ document.documentElement.setAttribute('data-js','');
 
 <section id="experience" class="sec alt">
 <div class="wrap stack">
-<div data-reveal><span class="eyebrow">03 — Career</span><h2 class="disp">Career path</h2></div>
+<div class="sticky-label"><span class="eyebrow">03 / Career</span></div>
+<div data-reveal><h2 class="disp">Career path</h2></div>
 <ol class="timeline">
 <li class="tl-mark" aria-hidden="true"><span class="mono">today</span></li>
 {''.join(job_html(j, i == 0) for i, j in enumerate(jobs))}
@@ -335,8 +353,9 @@ document.documentElement.setAttribute('data-js','');
 
 <section id="projects" class="sec">
 <div class="wrap stack big">
+<div class="sticky-label"><span class="eyebrow">04 / Side projects</span></div>
 <div class="sec-head" data-reveal>
-<div><span class="eyebrow">04 — Side projects</span><h2 class="disp">Where I keep my hands on the keyboard</h2><p class="lede">Products and playgrounds I build after hours — to try architectures, tools and AI workflows before I bring them to a team.</p></div>
+<div><h2 class="disp">Where I keep my hands on the keyboard</h2><p class="lede">Products and playgrounds I build after hours to try architectures, tools and AI workflows before I bring them to a team.</p></div>
 <a class="btn btn-ghost" href="https://github.com/limanartem" target="_blank" rel="noopener">{ico('GitHub', 16)}All repositories</a>
 </div>
 {''.join(project_html(p,i) for i,p in enumerate(projects))}
@@ -345,7 +364,8 @@ document.documentElement.setAttribute('data-js','');
 
 <section id="skills" class="sec alt">
 <div class="wrap stack">
-<div data-reveal><span class="eyebrow">05 — Toolbox</span><h2 class="disp">Skills &amp; stack</h2></div>
+<div class="sticky-label"><span class="eyebrow">05 / Toolbox</span></div>
+<div data-reveal><h2 class="disp">Skills &amp; stack</h2></div>
 <div class="grid-3">
 {''.join(f'<div data-reveal style="--d:{(k%3)*0.1:.2f}s"><div class="card skill"><h3 class="disp">{e(t)}</h3><div class="chips">{chips(items)}</div></div></div>' for k,(t,items) in enumerate(skills))}
 </div>
@@ -368,10 +388,10 @@ document.documentElement.setAttribute('data-js','');
 <section id="contact" class="sec contact">
 <div class="dotgrid flip" aria-hidden="true"></div>
 <div class="wrap stack">
-<span class="eyebrow" data-reveal>06 — Contact</span>
+<div class="sticky-label"><span class="eyebrow">06 / Contact</span></div>
 <h2 class="disp huge" data-reveal style="--d:.1s">Let's talk <span class="accent">engineering.</span></h2>
 <p class="lede" data-reveal style="--d:.2s">Happy to connect about engineering leadership, eHealth, distributed systems or AI-assisted development. LinkedIn is the best way to reach me.</p>
-<div class="btns" data-reveal style="--d:.3s">
+<div class="btns contact-btns" data-reveal style="--d:.3s">
 <a class="btn btn-primary" href="https://www.linkedin.com/in/artem-liman" target="_blank" rel="noopener">{ico('LinkedIn', 16)}Connect on LinkedIn</a>
 <a class="btn btn-ghost" href="https://github.com/limanartem" target="_blank" rel="noopener">{ico('GitHub', 16)}github.com/limanartem</a>
 </div>
