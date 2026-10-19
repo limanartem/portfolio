@@ -237,6 +237,10 @@ def project_html(p, i):
     dots = ''.join(f'<button type="button" class="dothit" data-go="{k}" aria-label="Go to slide {k+1}"><span class="dot{" on" if k==0 else ""}"></span></button>' for k in range(len(p['slides'])))
     captions = json.dumps([s['caption'] for s in p['slides']])
     return f'''<article class="project{rev}" data-carousel data-captions='{e(captions)}'>
+<div class="pr-head" data-reveal>
+<div class="pr-meta"><span class="mono status">{e(p['status'])}</span><span class="mono kind">{e(p['kind'])}</span></div>
+<h3 class="disp">{e(p['name'])}</h3>
+</div>
 <div class="pr-media" data-reveal="{'right' if i % 2 else 'left'}">
 <div class="carousel" role="region" aria-roledescription="carousel" aria-label="{e(p["name"])} screenshots">
 <div class="slides">{''.join(slide_html(s, p.get('slide_bg', ('var(--surface)', '20px'))) for s in p['slides'])}</div>
@@ -246,9 +250,7 @@ def project_html(p, i):
 </div>
 <div class="car-foot"><span class="caption">{e(p['slides'][0]['caption'])}</span><div class="dots">{dots}</div></div>
 </div>
-<div class="pr-text" data-reveal style="--d:.15s">
-<div class="pr-meta"><span class="mono status">{e(p['status'])}</span><span class="mono kind">{e(p['kind'])}</span></div>
-<h3 class="disp">{e(p['name'])}</h3>
+<div class="pr-body" data-reveal style="--d:.15s">
 <p class="pr-desc">{e(p['desc'])}</p>
 <ul class="pts">{bullets(p['points'], 'pt small')}</ul>
 <div class="chips">{chips(p['tech'], icons=True)}</div>
