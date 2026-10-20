@@ -320,6 +320,13 @@ html[data-js] [data-reveal]{opacity:1 !important;transform:none !important}
 .zoom-hint{position:absolute;right:10px;top:10px;width:32px;height:32px;border-radius:999px;display:grid;place-items:center;background:var(--glass);color:var(--text);border:1px solid var(--line);opacity:0;transition:opacity .25s;backdrop-filter:blur(6px)}
 .zoom:hover .zoom-hint,.zoom:focus-visible .zoom-hint{opacity:1}
 @media (hover:none){.zoom-hint{opacity:.9}}
+/* mobile screenshots in a phone frame; sized from the slide's height via container units */
+.slide-phones{container-type:size;display:flex;align-items:center;justify-content:center;gap:7cqh;background-image:radial-gradient(var(--dotgrid) 1px,transparent 1px);background-size:18px 18px}
+.zoom.phone{height:88cqh;max-height:none;aspect-ratio:1/2;flex:none;padding:3.6cqh 1.5cqh 2.6cqh;border-radius:5.5cqh;background:#08090B;border:1px solid #2A2F38;box-shadow:0 24px 50px -24px rgba(0,0,0,.55);overflow:visible}
+.zoom.phone::before{content:"";position:absolute;top:1.3cqh;left:50%;width:1.3cqh;height:1.3cqh;margin-left:-.65cqh;border-radius:50%;background:#1E232B}
+.zoom.phone::after{content:"";position:absolute;right:-.7cqh;top:18%;width:.6cqh;height:9%;border-radius:0 .4cqh .4cqh 0;background:#2A2F38}
+.zoom.phone img{display:block;width:100%;height:100%;max-width:none;max-height:none;object-fit:cover;object-position:top;border-radius:3.4cqh}
+.zoom.phone .zoom-hint{right:2.5cqh;top:5cqh}
 .lightbox{position:fixed;inset:0;z-index:100;background:rgba(8,9,12,.92);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);display:grid;grid-template-rows:1fr auto;opacity:0;transition:opacity .25s}
 .lightbox.open{opacity:1}
 .lightbox[hidden]{display:none}

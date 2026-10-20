@@ -18,7 +18,7 @@ Static single-page portfolio. No framework, no package manager, no tests: `build
 - Escape any text interpolated into the template with `e()` (`html.escape`). Strings that are already HTML (e.g. `TITLE` with `&amp;`) are inserted raw.
 - Company logos: `fetch_logos.py` writes `src/assets/logos/<slug>.svg|png`, and `build.py`'s `logo()` uses one when present, else falls back to the `MONOGRAM` text. Slugs must match in both files (`COMPANIES` in `fetch_logos.py`, `MONOGRAM` in `build.py`). Existing logo files are never overwritten without `--force`, so a hand-placed logo wins.
 - Tech-chip icons come from `src/icons.json` (name → SVG path), with `ICON_ALIAS` mapping variant names (e.g. `ASP.NET`) to one icon.
-- Project screenshot slides: `img('assets/<file>', 'caption', bg, pad)`. The background and padding default to the project's `slide_bg=(bg, padding)`.
+- Project screenshot slides: `img('assets/<file>', 'caption', bg, pad)`. The background and padding default to the project's `slide_bg=(bg, padding)`. Mobile screenshots: `phones(['assets/<a>', 'assets/<b>'], 'caption')` shows one or more single-screen images side by side in a CSS phone frame (crop composites into one screen per file first).
 
 ## Front end
 

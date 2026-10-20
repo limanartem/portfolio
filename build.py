@@ -119,6 +119,9 @@ earlier = [
 ]
 
 def img(src, caption, bg=None, pad=None): return dict(kind='img', src=asset(src), caption=caption, bg=bg, pad=pad)
+def phones(srcs, caption, bg=None, pad=None):
+    """One or more mobile screenshots shown side by side in a phone frame."""
+    return dict(kind='phones', srcs=[asset(s) for s in srcs], caption=caption, bg=bg, pad=pad)
 
 projects = [
  dict(id='planner', name='Schift Manager', kind='Resource & shift planning SaaS', status='Private beta',
@@ -142,10 +145,10 @@ projects = [
               'Localised UI and exercise content (English, German, Ukrainian); anonymous sign-in, so onboarding needs no account',
               'Expo app plus Firebase Cloud Functions in a TypeScript monorepo; Android builds go to testers through Firebase App Distribution'],
       tech=['React Native / Expo','TypeScript','Firebase','OpenAI API','Zod','Vitest','GitHub Actions'], private=True,
-      slide_bg=('#0E1013', '0px'),  # default for slides that don't set their own
-      slides=[img('assets/training-1.jpg','Onboarding and equipment scan: photos of the training space feed the plan generator'),
-              img('assets/training-2.jpg','Generated weekly programme and exercise detail with today’s target'),
-              img('assets/training-3.jpg','Plan ready: days per week, experience level and goal')]),
+      slide_bg=('var(--surface2)', '0px'),  # default for slides that don't set their own
+      slides=[phones(['assets/training-onboarding.jpg','assets/training-scan.jpg'],'Onboarding and equipment scan: photos of the training space feed the plan generator'),
+              phones(['assets/training-programme.jpg','assets/training-exercise.jpg'],'Generated weekly programme and exercise detail with today’s target'),
+              phones(['assets/training-ready.jpg'],'Plan ready: days per week, experience level and goal')]),
  dict(id='shop', name='Shop.App', kind='Distributed systems playground', status='Open source',
       desc='A web shop used as a playground for integrating distributed components: polyglot microservices, message-driven order processing and web and mobile clients, with the backend and web client running from a single docker-compose up.',
       points=['Orders move through pending, payment and dispatch workers on RabbitMQ; status changes reach web and mobile in real time over GraphQL subscriptions',
@@ -213,10 +216,16 @@ def chips(items, icons=False):
     return ''.join(f'<span class="chip">{ico(t) if use else ""}{e(t)}</span>' for t in items)
 def bullets(items, cls='pt'): return ''.join(f'<li class="{cls}">{BULLET}<span>{e(p)}</span></li>' for p in items)
 
+def zoom_btn(src, caption, cls='zoom'):
+    return f'<button type="button" class="{cls}" aria-label="View full size: {e(caption)}"><img src="{src}" alt="{e(caption)}" loading="lazy"><span class="zoom-hint" aria-hidden="true">{svg("zoom", 16)}</span></button>'
+
 def slide_html(s, default_bg=('var(--surface)', '20px')):
     if s['kind']=='img':
         bg, pad = s['bg'] or default_bg[0], s['pad'] or default_bg[1]
-        return f'<div class="slide"><div class="slide-img" style="background:{bg};padding:{pad}"><button type="button" class="zoom" aria-label="View full size: {e(s["caption"])}"><img src="{s["src"]}" alt="{e(s["caption"])}" loading="lazy"><span class="zoom-hint" aria-hidden="true">{svg("zoom", 16)}</span></button></div></div>'
+        return f'<div class="slide"><div class="slide-img" style="background:{bg};padding:{pad}">{zoom_btn(s["src"], s["caption"])}</div></div>'
+    if s['kind']=='phones':
+        bg, pad = s['bg'] or default_bg[0], s['pad'] or default_bg[1]
+        return f'<div class="slide"><div class="slide-img slide-phones" style="background:{bg};padding:{pad}">' + ''.join(zoom_btn(src, s['caption'], 'zoom phone') for src in s['srcs']) + '</div></div>'
     raise ValueError(f"unknown slide kind: {s['kind']!r}")
 
 def project_html(p, i):
