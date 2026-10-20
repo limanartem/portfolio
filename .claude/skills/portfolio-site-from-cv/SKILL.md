@@ -7,7 +7,7 @@ description: Build a modern single-page portfolio site for any profession from a
 
 A portfolio page is an *extended* CV for one person: who they are, what they have done, and proof. This method separates what is fixed (the chassis: build, deploy, navigation, theming, motion, verification) from what varies per person (which sections exist, what they contain, and how the page looks). Never carry over another person's sections, copy or palette by default.
 
-The chassis is this repository (template: https://github.com/limanartem/portfolio). Read `CLAUDE.md` and `README.md` first. `build.py` renders a content file into `dist/` with content-hashed assets; GitHub Actions deploys `dist/` to Pages on every push to `main`. Everything about the person lives in `content.py`; `examples/content-designer.py` is a second, creative-profile example. The default `content.py` is one engineering manager's site: an instance, not the standard.
+The chassis is this repository (template: https://github.com/limanartem/portfolio). Read `CLAUDE.md` and `README.md` first. `build.py` renders a content file into `dist/` with content-hashed assets; GitHub Actions deploys `dist/` to Pages on every push to `main`. Everything about the person lives in `content.py`; `examples/content-designer.py` is a second, creative-profile example. The default `content.py` is one engineering manager's site: an instance, not the standard. Its owner also appears in the README, SEO defaults, favicon, logos and assets; step 5 replaces all of them.
 
 ## 0. Prerequisites
 
@@ -59,15 +59,30 @@ Commit to one nameable direction and state it; offer two or three low-fi candida
 - Preview: `python3 build.py && python3 -m http.server -d dist 8000`. Another content file: `CONTENT=path python3 build.py`.
 - New section type needed: add a renderer in `build.py`'s `RENDERERS`, CSS in `styles.css`, docs in `CLAUDE.md`; do not special-case the template.
 
-## 5. Verify before handing over
+## 5. Rebrand the repo (no stale references)
+
+`content.py` is not the only file about the previous owner. Before replacing it, note their identifiers from its `PERSON`: full name, first and last name, initials, GitHub handle, LinkedIn slug, site URL, employer names and logo slugs. Then update every one of these in the same PR:
+
+- **SEO and sharing**: `PERSON['title']` and `description` (`<title>`, meta description, `og:*`) written for the new person; the `SITE_URL` default in `build.py` set to the new Pages URL (`https://<user>.github.io/<repo>/`, or the custom domain), plus the matching line in `CLAUDE.md`; `og:image` comes from the first hero photo, so a text-only hero shares without an image. `<html lang>` in `build.py` matches the page language. `src/robots.txt` stays generic; add a `Sitemap:` line only if a sitemap exists. `src/CNAME` holds only the new person's domain, or is deleted.
+- **Favicon**: `src/assets/favicon.svg` uses the new initials and the new `accent_dark`, not the previous owner's.
+- **README.md**: the title is `# <New Name>, portfolio`, plus a one-line description and the live URL. Keep the chassis docs and drop anything about the previous person.
+- **CLAUDE.md**: the `SITE_URL` default, and any copy that names the previous person or their projects.
+- **Logos**: `COMPANIES` in `fetch_logos.py` and `MONOGRAM` in `content.py` list only the new employers. Delete stale `src/assets/logos/*` files.
+- **Assets**: delete the previous person's portraits (`src/assets/hero/`), screenshots and other images that the new `content.py` does not reference. Unreferenced files are not published, but they still bloat the repo and mislead the next reader.
+- **Repo settings** (the person does these on GitHub; tell them): the About description, the website field and the social preview image.
+- Keep `examples/` and the template link in this skill: they describe the chassis, not the person.
+
+Check: `grep -rniE '<old name>|<old first>|<old handle>|<old linkedin slug>|<old domain>|<old employers>' --exclude-dir=.git --exclude-dir=dist .` returns nothing outside `examples/` and this skill's template link. Also build, then check that `dist/index.html` has the new `og:url` and title.
+
+## 6. Verify before handing over
 
 Headless Chromium at 1440, 390 and 375x667, dark and light. Scroll with `behavior:'instant'` so reveals fire. Check: no failed requests; sticky bar pinned deep in the page; hero autoplay advances with the pointer parked over it; lightbox opens and closes (sliders and gallery); no horizontal overflow; hero subject in the right third on desktop and fully in frame on phones; every `SECTIONS` entry appears in nav and page. Report what was checked; never claim untested behaviour.
 
-## 6. Deploy
+## 7. Deploy
 
 Push a branch, open a PR, merge to `main`; the workflow builds and deploys. If a README renders instead of the site, Pages source is still "branch" or a legacy build won: set the source to GitHub Actions and re-run the workflow. Custom domain goes in `src/CNAME`. `index.html` is cached by Pages for up to 10 minutes; assets are hashed, so nothing else is stale.
 
-## 7. Pitfalls
+## 8. Pitfalls
 
 - `overflow-x: hidden/clip` on `body` or the page root breaks `position: sticky` on iOS Safari; clip on `main` only.
 - Full-screen hero: no hover pause on autoplay (the pointer is always over it).
