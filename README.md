@@ -39,6 +39,8 @@ brand asset whenever an icon looks poor. To refresh everything: `python3 fetch_l
 
 ## Making a site for someone else
 
+The full method (what to collect, which sections to use for which profession, copy rules, verification) is the skill in `.claude/skills/portfolio-site-from-cv/`; Claude Code picks it up automatically in any repo made from this template.
+
 1. Copy the repo (GitHub "Use this template") and replace `content.py`. Nothing in `build.py`, `src/styles.css` or `src/app.js` needs to change for a different person.
 2. `SECTIONS` in `content.py` lists the sections in order; each has a `type` (`about`, `impact`, `experience`, `projects`, `gallery`, `publications`, `skills`, `contact`). Leave out what the person has nothing for: numbering and navigation follow the list, and a listed section with no data fails the build on purpose.
 3. `THEME` sets the accent (dark and light), the three font families with their Google Fonts query, and the first-visit scheme (`system`, `light` or `dark`). `PERSON` holds the hero copy and profile links; `HERO_PHOTOS` may be empty for a text-only hero; `STATS` and `MARQUEE` may be empty.

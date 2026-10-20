@@ -4,6 +4,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Static single-page portfolio. No framework, no package manager, no tests: `build.py` renders `src/` into `dist/`, and the GitHub Actions workflow deploys `dist/` to GitHub Pages on every push to `main`.
 
+## Making a site for another person
+
+Follow the skill in `.claude/skills/portfolio-site-from-cv/SKILL.md` (discovery, module choice, design direction, copy rules, verification). Only `content.py` changes for a new person.
+
 ## Commands
 
 - Build and preview: `python3 build.py && python3 -m http.server -d dist 8000`, then open `http://localhost:8000`.
