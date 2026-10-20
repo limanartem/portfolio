@@ -50,7 +50,7 @@ SECTIONS = [
              "I care about teams that ship steadily and engineers who keep growing. I stay hands-on with architecture reviews, CI/CD and automation, and use side projects to try new tools and AI workflows before bringing them to a team.",
          ],
          facts=[("Domain", "eHealth · TI/gematik"), ("Also shipped in", "Security · Life sciences · Aviation"), ("Works in", "Regulated, distributed teams")]),
-    dict(id="impact", type="impact", nav="Impact", label="Selected impact", heading="Outcomes I'm proud of"),
+    dict(id="impact", type="impact", nav="Impact", label="Selected impact", heading="Outcomes I'm proud of", style="scenes"),
     dict(id="experience", type="experience", nav="Career", label="Career", heading="Career path",
          era_label="2001 – 2012 · Earlier roles", start_label="2001 · first commit"),
     dict(id="projects", type="projects", nav="Projects", label="Side projects",
@@ -64,13 +64,15 @@ SECTIONS = [
          buttons=[("Connect on LinkedIn", "https://www.linkedin.com/in/artem-liman", "LinkedIn"), ("github.com/limanartem", "https://github.com/limanartem", "GitHub")]),
 ]
 
+# (where, metric, title, text[, (scene, from, to)]). The scene tuple is used by the impact section's style="scenes":
+# a particle stage re-enacts the change. Scenes: assemble, migrate, lift, pivot, merge, order.
 IMPACT = [
- ('CompuGroup Medical','MVP → Live','Took CGM Praxis into production','Led two teams taking a multi-tenant cloud SaaS for medical practices from MVP to production. Live since 2025 with several dozen practices onboarded. Owned the TI/gematik modules: VSDM, KIM, ePA, eAU, eArztbrief and e-signature.'),
- ('Avira / Gen','~200k accounts','Zero-knowledge backend migration','Moved Avira Password Manager onto Gen’s shared backend. Zero-knowledge encryption ruled out bulk re-encryption, so we designed a migration that moved each account safely on its next login over several months.'),
- ('inhive','Cloud eHealth platform','Built a medical data platform from the ground up','Led development of inhive’s own eHealth platform (web portal, taxonomy API and developer portal), bringing data from on-premise source systems into the cloud securely, with real-time access, cross-system reporting and fully automated CI/CD.'),
- ('Roche Diagnostics','SQL Server → SAP HANA','Re-platformed a biospecimen system','Architecture and development lead on a LIMS release that moved storage to SAP HANA and updated availability and replication, ready for larger datasets, more complex studies and globally distributed samples.'),
- ('Lufthansa Group','3 airlines, 1 platform','Public web platform at airline scale','Led a Scrum team on the group’s public-facing web platform, white-labeled for Lufthansa, SWISS and Austrian Airlines, from requirements to end-to-end delivery and third-party API coordination.'),
- ('Genentech · Merck · Bayer','Global pharma R&D','Architecture advisory in regulated life sciences','Assessed as-is architectures, designed target architectures and ran RFI/RFP vendor selections, including a LIMS for Genentech and a big-data and genome-analysis platform for Merck R&D.'),
+ ('CompuGroup Medical','MVP → Live','Took CGM Praxis into production','Led two teams taking a multi-tenant cloud SaaS for medical practices from MVP to production. Live since 2025 with several dozen practices onboarded. Owned the TI/gematik modules: VSDM, KIM, ePA, eAU, eArztbrief and e-signature.', ('assemble', 'MVP', 'live · dozens of practices')),
+ ('Avira / Gen','~200k accounts','Zero-knowledge backend migration','Moved Avira Password Manager onto Gen’s shared backend. Zero-knowledge encryption ruled out bulk re-encryption, so we designed a migration that moved each account safely on its next login over several months.', ('migrate', 'Avira backend', 'Gen backend')),
+ ('inhive','Cloud eHealth platform','Built a medical data platform from the ground up','Led development of inhive’s own eHealth platform (web portal, taxonomy API and developer portal), bringing data from on-premise source systems into the cloud securely, with real-time access, cross-system reporting and fully automated CI/CD.', ('lift', 'on-premise sources', 'cloud platform')),
+ ('Roche Diagnostics','SQL Server → SAP HANA','Re-platformed a biospecimen system','Architecture and development lead on a LIMS release that moved storage to SAP HANA and updated availability and replication, ready for larger datasets, more complex studies and globally distributed samples.', ('pivot', 'SQL Server · rows', 'SAP HANA · columns')),
+ ('Lufthansa Group','3 airlines, 1 platform','Public web platform at airline scale','Led a Scrum team on the group’s public-facing web platform, white-labeled for Lufthansa, SWISS and Austrian Airlines, from requirements to end-to-end delivery and third-party API coordination.', ('merge', '3 airlines', '1 platform')),
+ ('Genentech · Merck · Bayer','Global pharma R&D','Architecture advisory in regulated life sciences','Assessed as-is architectures, designed target architectures and ran RFI/RFP vendor selections, including a LIMS for Genentech and a big-data and genome-analysis platform for Merck R&D.', ('order', 'as-is', 'target architecture')),
 ]
 
 JOBS = [

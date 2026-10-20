@@ -28,7 +28,7 @@ Follow the skill in `.claude/skills/portfolio-site-from-cv/SKILL.md` (discovery,
 
 ## Section types
 
-`about` (heading, paragraphs, facts), `impact` (IMPACT cards), `experience` (JOBS timeline + EARLIER compact stops, `era_label`, `start_label`), `projects` (PROJECTS with sliders, `intro`, `cta`), `gallery` (GALLERY tiles, `wide`/`tall` spans, lightbox), `publications` (PUBLICATIONS rows), `skills` (SKILLS groups + EDUCATION, CERTIFICATIONS, LANGS), `contact` (heading, text, buttons, FOOTER). Hero without `HERO_PHOTOS` renders the text-only variant.
+`about` (heading, paragraphs, facts), `impact` (IMPACT cards; `style="scenes"` swaps them for a sticky canvas where particles re-enact each outcome as its step scrolls past, which needs a `(scene, from, to)` 5th field on every item, scenes: assemble, migrate, lift, pivot, merge, order), `experience` (JOBS timeline + EARLIER compact stops, `era_label`, `start_label`), `projects` (PROJECTS with sliders, `intro`, `cta`), `gallery` (GALLERY tiles, `wide`/`tall` spans, lightbox), `publications` (PUBLICATIONS rows), `skills` (SKILLS groups + EDUCATION, CERTIFICATIONS, LANGS), `contact` (heading, text, buttons, FOOTER). Hero without `HERO_PHOTOS` renders the text-only variant.
 
 ## Front end
 

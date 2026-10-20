@@ -230,4 +230,152 @@
     go = function (i) { _go(i); var d = car.querySelector('.dot.on'); if (d) { d.classList.remove('run'); void d.offsetWidth; if (!manual && !reduce) d.classList.add('run'); } };
     go(0);
   });
+  /* ---------- impact scenes: particles re-enact each outcome as its step scrolls past ---------- */
+  document.querySelectorAll('[data-scenes]').forEach(function (box) {
+    var stage = box.querySelector('.scn-stage'), cv = stage && stage.querySelector('canvas');
+    if (!cv || !cv.getContext) return;
+    var ctx = cv.getContext('2d');
+    var steps = Array.prototype.slice.call(box.querySelectorAll('.scn-step'));
+    var ticks = Array.prototype.slice.call(stage.querySelectorAll('.scn-ticks i'));
+    var hudN = stage.querySelector('.scn-n');
+    var stacked = window.matchMedia('(max-width: 900px)');
+    var N = window.innerWidth < 700 ? 800 : 1600, n = steps.length;
+    function clamp(v) { return v < 0 ? 0 : v > 1 ? 1 : v; }
+    function rng(seed) { return function () { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; }; }
+    function disk(R, cx, cy, r) { var a = R() * 6.2832, d = Math.sqrt(R()) * r; return [cx + Math.cos(a) * d, cy + Math.sin(a) * d]; }
+    function rect(R, x, y, w, h) { return [x + R() * w, y + R() * h]; }
+    function inCloud(x, y) {
+      function c(cx, cy, r) { return (x - cx) * (x - cx) + (y - cy) * (y - cy) < r * r; }
+      return c(.37, .4, .12) || c(.52, .31, .16) || c(.66, .41, .11) || (y > .4 && y < .52 && x > .3 && x < .72);
+    }
+    /* each scene: [before, after] point generators in a unit square, label positions, and whether groups keep their own tone */
+    var SCENES = {
+      assemble: { f: [function (i, R) { return disk(R, .5, .5, .07 + .06 * R()); },
+                      function (i, R) { var t = i % 36, c = t % 6, r = (t / 6) | 0, s = .13, z = .085; return rect(R, .5 + (c - 2.5) * s - z / 2, .47 + (r - 2.5) * s - z / 2, z, z); }],
+                  l: [[.5, .68], [.5, .93]] },
+      migrate:  { f: [function (i, R) { return disk(R, .26, .5, .17); }, function (i, R) { return disk(R, .74, .5, .17); }],
+                  l: [[.26, .77], [.74, .77]] },
+      lift:     { f: [function (i, R) { return rect(R, .1 + (i % 3) * .3, .72, .2, .13); },
+                      function (i, R) { var x, y; do { x = .22 + R() * .56; y = .14 + R() * .4; } while (!inCloud(x, y)); return [x, y]; }],
+                  l: [[.5, .94], [.5, .64]] },
+      pivot:    { f: [function (i, R, u) { return [.14 + u * .72, .18 + (i % 9) * .075 + (R() - .5) * .008]; },
+                      function (i, R, u) { return [.14 + (i % 9) * .09 + (R() - .5) * .008, .18 + u * .6]; }],
+                  l: [[.5, .9], [.5, .9]] },
+      merge:    { f: [function (i, R) { return disk(R, .2 + (i % 3) * .3, .5, .12); }, function (i, R) { return rect(R, .12, .43, .76, .14); }],
+                  l: [[.5, .69], [.5, .67]], tint: 1 },
+      order:    { f: [function (i, R) { return [.06 + R() * .88, .08 + R() * .76]; },
+                      function (i, R) { var t = i % 12; return rect(R, .1 + (t % 4) * .21, .23 + ((t / 4) | 0) * .22, .17, .1); }],
+                  l: [[.5, .95], [.5, .88]] }
+    };
+    var P = [], g, i;
+    var Rp = rng(7);
+    for (i = 0; i < N; i++) P.push({ x: 0, y: 0, u: Rp(), d: Rp(), ph: Rp() * 6.28, sg: Rp() < .5 ? -1 : 1, z: 1.8 + Rp() * 1.9, g: i % 3 });
+    var groups = [[], [], []];
+    P.forEach(function (p, k) { groups[p.g].push(k); });
+    /* keyframes along the scroll position s (step k is centred at s = k): arrive at "before", play the change, hold "after" */
+    var kfs = [], labels = [];
+    steps.forEach(function (st, k) {
+      var kind = st.getAttribute('data-scene'), sc = SCENES[kind] || SCENES.order, R = rng(101 + k * 977);
+      var A = new Float32Array(N * 2), B = new Float32Array(N * 2), tint = sc.tint || 0;
+      for (i = 0; i < N; i++) {
+        var a = sc.f[0](i, R, P[i].u), b = sc.f[1](i, R, P[i].u);
+        A[i * 2] = a[0]; A[i * 2 + 1] = a[1]; B[i * 2] = b[0]; B[i * 2 + 1] = b[1];
+      }
+      var mig = kind === 'migrate';
+      kfs.push({ s: k - .3, p: A, tint: tint, st: .35, arc: .06, mig: false });
+      kfs.push({ s: k + .12, p: B, tint: tint, st: mig ? .8 : .5, arc: mig ? -.26 : .05, mig: mig });
+      kfs.push({ s: k + .35, p: B, tint: tint, st: 0, arc: 0, mig: false });
+      labels.push({ k: k, a: st.getAttribute('data-from'), b: st.getAttribute('data-to'), la: sc.l[0], lb: sc.l[1] });
+    });
+
+    var col = ['#000', '#000', '#000'], faint = '#888', accent = '#0a0', mono = 'monospace', rgb = {};
+    var probe = document.createElement('canvas').getContext('2d');
+    function toRgb(c) { probe.fillStyle = '#000'; probe.fillStyle = c; var h = probe.fillStyle; if (h.charAt(0) !== '#') return [128, 128, 128]; return [parseInt(h.substr(1, 2), 16), parseInt(h.substr(3, 2), 16), parseInt(h.substr(5, 2), 16)]; }
+    function readColors() {
+      var cs = getComputedStyle(root);
+      accent = cs.getPropertyValue('--accent').trim(); faint = cs.getPropertyValue('--faint').trim();
+      mono = (cs.getPropertyValue('--font-mono').trim() || 'monospace') + ', ui-monospace, monospace';
+      rgb = { a: toRgb(accent), t: toRgb(cs.getPropertyValue('--text2').trim()), m: toRgb(cs.getPropertyValue('--muted').trim()) };
+    }
+    function mix(c1, c2, t, al) { return 'rgba(' + Math.round(c1[0] + (c2[0] - c1[0]) * t) + ',' + Math.round(c1[1] + (c2[1] - c1[1]) * t) + ',' + Math.round(c1[2] + (c2[2] - c1[2]) * t) + ',' + al + ')'; }
+    readColors();
+    new MutationObserver(readColors).observe(root, { attributes: true, attributeFilter: ['data-theme'] });
+    window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', readColors);
+
+    var W = 0, H = 0, dpr = 1;
+    function size() {
+      var r = stage.getBoundingClientRect(); dpr = Math.min(window.devicePixelRatio || 1, 2);
+      W = r.width; H = r.height; cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0); first = true;
+    }
+    size(); window.addEventListener('resize', size);
+
+    var ptr = null;
+    if (!reduce) {
+      stage.addEventListener('pointermove', function (ev) { var r = stage.getBoundingClientRect(); ptr = { x: ev.clientX - r.left, y: ev.clientY - r.top }; });
+      stage.addEventListener('pointerleave', function () { ptr = null; });
+    }
+
+    function scrollPos() {
+      var vh = window.innerHeight;
+      var anchor = stacked.matches ? (stage.getBoundingClientRect().bottom + vh) / 2 : vh * .5;
+      var c = steps.map(function (st) { var r = st.getBoundingClientRect(); return r.top + r.height / 2; });
+      if (n === 1) return 0;
+      if (anchor < c[0]) return (anchor - c[0]) / (c[1] - c[0]);
+      for (var k = 0; k < n - 1; k++) if (anchor < c[k + 1]) return k + (anchor - c[k]) / (c[k + 1] - c[k]);
+      return n - 1 + (anchor - c[n - 1]) / (c[n - 1] - c[n - 2]);
+    }
+
+    var first = true, active = -1, running = false;
+    function frame(now) {
+      if (!running) return;
+      var s = scrollPos(), j = 0;
+      if (s <= kfs[0].s) j = 0; else if (s >= kfs[kfs.length - 1].s) j = kfs.length - 2;
+      else while (j < kfs.length - 2 && s >= kfs[j + 1].s) j++;
+      var a = kfs[j], b = kfs[j + 1], t = clamp((s - a.s) / (b.s - a.s));
+      var tint = a.tint + (b.tint - a.tint) * t, st = b.st, arc = b.arc;
+      var S = Math.min(W, H - 34) * .94, ox = (W - S) / 2, oy = (H - 34 - S) / 2;
+      var amb = reduce ? 0 : S * .004, chase = reduce || first ? 1 : .14, tm = now * .0011;
+      for (i = 0; i < N; i++) {
+        var p = P[i], ti = st ? clamp((t - p.d * st) / (1 - st)) : t, e = ti * ti * (3 - 2 * ti);
+        var ax = a.p[i * 2], ay = a.p[i * 2 + 1], bx = b.p[i * 2], by = b.p[i * 2 + 1];
+        var x = ax + (bx - ax) * e, y = ay + (by - ay) * e;
+        if (arc) { var lift = Math.sin(Math.PI * ti) * arc * (b.mig ? .5 + p.u : p.sg); x -= (by - ay) * lift; y += (bx - ax) * lift; }
+        var tx = ox + x * S + Math.sin(tm * (.6 + p.u) + p.ph) * amb, ty = oy + y * S + Math.cos(tm * (.7 + p.d) + p.ph) * amb;
+        if (ptr) { var dx = tx - ptr.x, dy = ty - ptr.y, dd = dx * dx + dy * dy; if (dd < 6400) { var f = (80 - Math.sqrt(dd)) / 80 * 30 / (Math.sqrt(dd) + 1); tx += dx * f; ty += dy * f; } }
+        p.x += (tx - p.x) * chase; p.y += (ty - p.y) * chase;
+      }
+      first = false;
+      /* fade the previous frame instead of clearing it, so moving particles leave short trails */
+      ctx.globalCompositeOperation = 'destination-out'; ctx.fillStyle = 'rgba(0,0,0,' + (reduce ? 1 : .42) + ')'; ctx.fillRect(0, 0, W, H);
+      ctx.globalCompositeOperation = 'source-over';
+      var fills = [mix(rgb.a, rgb.a, 0, 1), mix(rgb.a, rgb.t, tint, .72 + .28 * tint), mix(rgb.a, rgb.m, tint, .5 + .5 * tint)];
+      for (g = 0; g < 3; g++) {
+        ctx.fillStyle = fills[g];
+        var ids = groups[g];
+        for (var q = 0; q < ids.length; q++) { var pp = P[ids[q]]; ctx.fillRect(pp.x - pp.z / 2, pp.y - pp.z / 2, pp.z, pp.z); }
+      }
+      ctx.font = '600 12px ' + mono; ctx.textAlign = 'center';
+      labels.forEach(function (L) {
+        var k = L.k;
+        var aA = clamp((s - (k - .65)) / .3) * (1 - clamp((s - (k - .2)) / .3));
+        var aB = clamp((s - (k - .02)) / .15) * (1 - clamp((s - (k + .42)) / .2));
+        if (aA > .01) { ctx.globalAlpha = aA; ctx.fillStyle = faint; ctx.fillText(L.a.toUpperCase(), ox + L.la[0] * S, oy + L.la[1] * S); }
+        if (aB > .01) { ctx.globalAlpha = aB; ctx.fillStyle = accent; ctx.fillText(L.b.toUpperCase(), ox + L.lb[0] * S, oy + L.lb[1] * S); }
+      });
+      ctx.globalAlpha = 1;
+      var on = Math.max(0, Math.min(n - 1, Math.round(s)));
+      if (on !== active) {
+        active = on;
+        steps.forEach(function (st, k) { st.classList.toggle('on', k === on); });
+        if (hudN) hudN.textContent = (on < 9 ? '0' : '') + (on + 1) + ' / ' + (n < 10 ? '0' : '') + n;
+      }
+      ticks.forEach(function (tk, k) { tk.style.setProperty('--p', clamp(s - k + .5).toFixed(3)); });
+      requestAnimationFrame(frame);
+    }
+    function start() { if (!running) { running = true; requestAnimationFrame(frame); } }
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (en) { if (en[0].isIntersecting) start(); else running = false; }, { rootMargin: '200px 0px' }).observe(box);
+    } else start();
+  });
 })();

@@ -196,13 +196,38 @@ def render(C):
 </div>
 </section>'''
 
+    SCENES = ('assemble', 'migrate', 'lift', 'pivot', 'merge', 'order')
+
     def sec_impact(s):
         items = get('IMPACT', [])
         if not items: return ''
-        cards = ''.join(f'<div data-reveal style="--d:{(k%3)*0.12:.2f}s"><article class="card impact"><div class="card-top mono"><span>{e(w)}</span><span>{k+1:02d}</span></div><div class="disp metric">{e(m)}</div><h3 class="disp">{e(t)}</h3><p>{e(b)}</p></article></div>' for k, (w, m, t, b) in enumerate(items))
+        if s.get('style') == 'scenes':
+            return impact_scenes(s, items)
+        cards = ''.join(f'<div data-reveal style="--d:{(k%3)*0.12:.2f}s"><article class="card impact"><div class="card-top mono"><span>{e(w)}</span><span>{k+1:02d}</span></div><div class="disp metric">{e(m)}</div><h3 class="disp">{e(t)}</h3><p>{e(b)}</p></article></div>' for k, (w, m, t, b, *_) in enumerate(items))
         return f'''<section id="{s['id']}" class="sec pt0">
 <div class="wrap stack">{sticky(s['id'])}<div data-reveal><h2 class="disp">{s['heading']}</h2></div>
 <div class="grid-3">{cards}</div>
+</div>
+</section>'''
+
+    def impact_scenes(s, items):
+        """Scroll-driven particle stage: each item's 5th field (scene, from-label, to-label) is re-enacted on a canvas."""
+        n = len(items)
+        steps = []
+        for k, it in enumerate(items):
+            if len(it) < 5 or it[4][0] not in SCENES:
+                raise ValueError(f"impact style 'scenes' needs (kind, from, to) as the 5th field, kind in {SCENES}: {it[0]!r}")
+            w, m, t, b, (kind, frm, to) = it
+            steps.append(f'<li class="scn-step" data-scene="{kind}" data-from="{e(frm)}" data-to="{e(to)}"><article class="scn-card">'
+                         f'<div class="card-top mono"><span>{e(w)}</span><span>{k+1:02d} / {n:02d}</span></div>'
+                         f'<div class="disp metric">{e(m)}</div><h3 class="disp">{e(t)}</h3><p>{e(b)}</p></article></li>')
+        ticks = ''.join('<i></i>' for _ in items)
+        return f'''<section id="{s['id']}" class="sec pt0">
+<div class="wrap stack">{sticky(s['id'])}<div data-reveal><h2 class="disp">{s['heading']}</h2></div>
+<div class="scenes" data-scenes>
+<div class="scn-stage" aria-hidden="true"><canvas></canvas><div class="scn-hud mono"><span class="scn-n">01 / {n:02d}</span><span class="scn-ticks">{ticks}</span></div></div>
+<ol class="scn-steps">{''.join(steps)}</ol>
+</div>
 </div>
 </section>'''
 
