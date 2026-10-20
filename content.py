@@ -66,8 +66,8 @@ SECTIONS = [
 
 IMPACT = [
  dict(where='CompuGroup Medical', metric='MVP → Live', title='Took CGM Praxis into production',
-      body='Led two teams taking a multi-tenant cloud SaaS for medical practices from MVP to production. Live since 2025 with several dozen practices onboarded. Owned the TI/gematik modules: VSDM, KIM, ePA, eAU, eArztbrief and e-signature.',
-      tags=['2 teams · 15 engineers', 'TI/gematik', 'Multi-tenant SaaS']),
+      body='Led two teams taking a multi-tenant cloud SaaS for medical practices from MVP to production. Live since 2025 with several dozen practices onboarded, migrated from their previous systems through the xBDT import my teams built. Owned the TI/gematik modules: VSDM, KIM, ePA, eAU, eArztbrief and e-signature.',
+      tags=['2 teams · 15 engineers', 'TI/gematik', 'xBDT onboarding']),
  dict(where='Avira / Gen', metric='~200k accounts', title='Zero-knowledge backend migration',
       body='Moved Avira Password Manager onto Gen’s shared backend. Zero-knowledge encryption ruled out bulk re-encryption, so we designed a migration that moved each account safely on its next login over several months.',
       tags=['Zero-knowledge', 'Per-login migration', 'AWS']),
@@ -89,6 +89,7 @@ JOBS = [
  dict(logo='cgm', period='Jun 2024 – Present', company='CompuGroup Medical', place='Germany', role='Team Leader · CGM Praxis',
       scope='Two teams, 15 engineers in Germany and Romania, 5 direct reports. Multi-tenant cloud SaaS for medical practices.',
       points=['Took CGM Praxis from MVP to production; responsible for TI/gematik modules and TI vendor coordination.',
+              'Shipped the practice text editor, the integration with CGM’s ClickDoc Pro and a new customer onboarding process that migrates practices via xBDT import.',
               'Introduced automated engineering and product KPIs with team dashboards.',
               'Automated release preparation across ~35 repositories and built a signed, notarized macOS installer pipeline on Azure DevOps.',
               'Delivered my teams’ share of the C5 attestation: access automation, vulnerability handling, pentest follow-ups, SOPs.',
