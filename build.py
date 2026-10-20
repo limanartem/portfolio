@@ -88,11 +88,19 @@ def render(C):
     ICONS = json.load(open(os.path.join(SRC, "icons.json")))
     for a, b in get('ICON_ALIAS', {}).items(): ICONS.setdefault(a, ICONS.get(b))
     chip_icons = get('CHIP_ICONS', 'all')
+    # Brand icons are defined once in a hidden sprite at the top of <body> and referenced with <use>,
+    # so a path used by many chips is shipped once. `sprite` maps path data -> (symbol id, viewBox).
+    sprite = {}
     def ico(name, size=14, cls=""):
         p = ICONS.get(name)
         if not p: return ""
         vb, d = (p["vb"], p["d"]) if isinstance(p, dict) else ("0 0 24 24", p)
-        return f'<svg class="ico {cls}" width="{size}" height="{size}" viewBox="{vb}" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" d="{d}"/></svg>'
+        if d not in sprite: sprite[d] = ('i-' + re.sub(r'[^a-z0-9]+', '-', name.lower()).strip('-'), vb)
+        return f'<svg class="ico {cls}" width="{size}" height="{size}" aria-hidden="true"><use href="#{sprite[d][0]}"/></svg>'
+    def sprite_html():
+        if not sprite: return ''
+        syms = ''.join(f'<symbol id="{sid}" viewBox="{vb}"><path fill="currentColor" fill-rule="evenodd" d="{d}"/></symbol>' for d, (sid, vb) in sprite.items())
+        return f'<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">{syms}</svg>\n'
     def chips(items, icons=False):
         use = chip_icons == "all" or (chip_icons == "projects" and icons)
         return ''.join(f'<span class="chip">{ico(t) if use else ""}{e(t)}</span>' for t in items)
@@ -343,6 +351,7 @@ def render(C):
     theme_vars = f":root{{--accent:{T['accent_dark']};--font-display:'{T['display_font']}';--font-body:'{T['body_font']}';--font-mono:'{T['mono_font']}'}}" \
                  f":root[data-theme=\"light\"]{{--accent:{T['accent_light']}}}@media (prefers-color-scheme: light){{:root:not([data-theme=\"dark\"]){{--accent:{T['accent_light']}}}}}"
 
+    SPRITE = '<!--SPRITE-->'
     return f'''<!doctype html>
 <html lang="en" data-default-theme="{scheme}">
 <head>
@@ -368,8 +377,7 @@ document.documentElement.setAttribute('data-js','');
 </script>
 </head>
 <body>
-
-<header class="top">
+{SPRITE}<header class="top">
 <nav aria-label="Main">
 <a href="#top" class="brand disp"><span class="brand-mark">{e(P['initials'])}</span><span>{e(P['name'])}</span></a>
 <div class="navlinks">
@@ -429,7 +437,7 @@ document.documentElement.setAttribute('data-js','');
 <script src="{asset("app.js")}"></script>
 </body>
 </html>
-'''
+'''.replace(SPRITE, sprite_html())
 
 
 if __name__ == "__main__":
