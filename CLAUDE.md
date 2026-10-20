@@ -11,6 +11,7 @@ Follow the skill in `.claude/skills/portfolio-site-from-cv/SKILL.md` (discovery,
 ## Commands
 
 - Build and preview: `python3 build.py && python3 -m http.server -d dist 8000`, then open `http://localhost:8000`.
+- Single-file preview: `python3 build.py && python3 preview.py` writes `dist/preview.html` with CSS, JS and images inlined, so it opens from disk. `.github/workflows/preview.yml` builds it on every pull request, uploads it as an artifact and keeps one comment on the PR with the download link.
 - Fetch company logos: `python3 fetch_logos.py` (add `--force` to refetch). This needs network access, and Pillow for `.ico` → `.png`. CI runs it before every build.
 - `SITE_URL` (env) sets the absolute URLs in the OpenGraph tags. It defaults to `https://limanartem.github.io/portfolio/`. CI sets it from the Pages config.
 
