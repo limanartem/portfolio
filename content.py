@@ -64,13 +64,33 @@ SECTIONS = [
          buttons=[("Connect on LinkedIn", "https://www.linkedin.com/in/artem-liman", "LinkedIn"), ("github.com/limanartem", "https://github.com/limanartem", "GitHub")]),
 ]
 
+# Outcomes as constraint → decision → result. `shift=(before, after)` is the headline change; the arrow draws on reveal.
+# A plain (where, metric, title, text) tuple still renders as a simple card.
 IMPACT = [
- ('CompuGroup Medical','MVP → Live','Took CGM Praxis into production','Led two teams taking a multi-tenant cloud SaaS for medical practices from MVP to production. Live since 2025 with several dozen practices onboarded. Owned the TI/gematik modules: VSDM, KIM, ePA, eAU, eArztbrief and e-signature.'),
- ('Avira / Gen','~200k accounts','Zero-knowledge backend migration','Moved Avira Password Manager onto Gen’s shared backend. Zero-knowledge encryption ruled out bulk re-encryption, so we designed a migration that moved each account safely on its next login over several months.'),
- ('inhive','Cloud eHealth platform','Built a medical data platform from the ground up','Led development of inhive’s own eHealth platform (web portal, taxonomy API and developer portal), bringing data from on-premise source systems into the cloud securely, with real-time access, cross-system reporting and fully automated CI/CD.'),
- ('Roche Diagnostics','SQL Server → SAP HANA','Re-platformed a biospecimen system','Architecture and development lead on a LIMS release that moved storage to SAP HANA and updated availability and replication, ready for larger datasets, more complex studies and globally distributed samples.'),
- ('Lufthansa Group','3 airlines, 1 platform','Public web platform at airline scale','Led a Scrum team on the group’s public-facing web platform, white-labeled for Lufthansa, SWISS and Austrian Airlines, from requirements to end-to-end delivery and third-party API coordination.'),
- ('Genentech · Merck · Bayer','Global pharma R&D','Architecture advisory in regulated life sciences','Assessed as-is architectures, designed target architectures and ran RFI/RFP vendor selections, including a LIMS for Genentech and a big-data and genome-analysis platform for Merck R&D.'),
+ dict(where='CompuGroup Medical', shift=('MVP', 'Live'), title='Took CGM Praxis into production',
+      constraint='Two teams in Germany and Romania, and a go-live that hinged on the TI/gematik modules (VSDM, KIM, ePA, eAU, eArztbrief, e-signature) working against external TI vendors.',
+      decision='Owned the TI modules and the vendor coordination myself, and automated release preparation across ~35 repositories so releasing stopped being the bottleneck.',
+      result='Live since 2025, with several dozen medical practices onboarded.'),
+ dict(where='Avira / Gen', shift=('Avira backend', 'Gen backend'), title='Zero-knowledge backend migration',
+      constraint='Zero-knowledge encryption: the server never sees a master password, so vaults cannot be re-encrypted in bulk.',
+      decision='Move each vault on its owner’s next login, and run both backends for as long as the tail takes.',
+      result='~200k Password Manager accounts moved safely over several months.'),
+ dict(where='Roche', shift=('Prototype', 'Production'), title='Research collaboration platform shipped',
+      constraint='A Confluence-based collaboration platform that research teams already wanted, built as a prototype.',
+      decision='Led the team that hardened it for production use rather than starting over.',
+      result='In production for Roche research teams.'),
+ dict(where='Roche Diagnostics', shift=('SQL Server', 'SAP HANA'), title='Re-platformed a biospecimen system',
+      constraint='A LIMS heading for larger datasets, more complex studies and samples spread across the globe.',
+      decision='Move storage to SAP HANA and rework availability and replication in the same release, as architecture and development lead.',
+      result='A release ready for the dataset sizes and distributed studies that followed.'),
+ dict(where='Lufthansa Group', shift=('3 airlines', '1 platform'), title='Public web platform at airline scale',
+      constraint='Three airline brands on one public-facing platform, with third-party APIs the team did not control.',
+      decision='One white-labeled platform, delivered end to end by a single Scrum team from requirements to release.',
+      result='Lufthansa, SWISS and Austrian Airlines served from the same codebase.'),
+ dict(where='Genentech · Merck · Bayer', shift=('As-is', 'Target architecture'), title='Architecture advisory in regulated life sciences',
+      constraint='Regulated R&D, and vendor decisions for systems that would run for years.',
+      decision='Assess the as-is architecture, design the target and run a structured RFI/RFP rather than pick a vendor on reputation.',
+      result='A LIMS selection for Genentech and a big-data and genome-analysis platform for Merck R&D.'),
 ]
 
 JOBS = [

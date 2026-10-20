@@ -28,7 +28,7 @@ Follow the skill in `.claude/skills/portfolio-site-from-cv/SKILL.md` (discovery,
 
 ## Section types
 
-`about` (heading, paragraphs, facts), `impact` (IMPACT cards), `experience` (JOBS timeline + EARLIER compact stops, `era_label`, `start_label`), `projects` (PROJECTS with sliders, `intro`, `cta`), `gallery` (GALLERY tiles, `wide`/`tall` spans, lightbox), `publications` (PUBLICATIONS rows), `skills` (SKILLS groups + EDUCATION, CERTIFICATIONS, LANGS), `contact` (heading, text, buttons, FOOTER). Hero without `HERO_PHOTOS` renders the text-only variant.
+`about` (heading, paragraphs, facts), `impact` (IMPACT cards: `dict(where, shift=(before, after), title, constraint, decision, result)` renders a constraint → decision → result card with a drawn arrow; a `(where, metric, title, text)` tuple renders a plain card), `experience` (JOBS timeline + EARLIER compact stops, `era_label`, `start_label`), `projects` (PROJECTS with sliders, `intro`, `cta`), `gallery` (GALLERY tiles, `wide`/`tall` spans, lightbox), `publications` (PUBLICATIONS rows), `skills` (SKILLS groups + EDUCATION, CERTIFICATIONS, LANGS), `contact` (heading, text, buttons, FOOTER). Hero without `HERO_PHOTOS` renders the text-only variant.
 
 ## Front end
 

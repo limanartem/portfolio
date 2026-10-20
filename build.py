@@ -199,7 +199,16 @@ def render(C):
     def sec_impact(s):
         items = get('IMPACT', [])
         if not items: return ''
-        cards = ''.join(f'<div data-reveal style="--d:{(k%3)*0.12:.2f}s"><article class="card impact"><div class="card-top mono"><span>{e(w)}</span><span>{k+1:02d}</span></div><div class="disp metric">{e(m)}</div><h3 class="disp">{e(t)}</h3><p>{e(b)}</p></article></div>' for k, (w, m, t, b) in enumerate(items))
+        def card(k, it):
+            top = f'<div class="card-top mono"><span>{e(it["where"] if isinstance(it, dict) else it[0])}</span><span>{k+1:02d}</span></div>'
+            if not isinstance(it, dict):
+                w, m, t, b = it
+                return f'{top}<div class="disp metric">{e(m)}</div><h3 class="disp">{e(t)}</h3><p>{e(b)}</p>'
+            a, b = it['shift']
+            shift = f'<div class="disp metric shift"><span>{e(a)}</span><span class="arrow" aria-hidden="true"></span><span class="to">{e(b)}</span></div>'
+            cdr = ''.join(f'<div><dt class="mono">{l}</dt><dd>{e(it[f])}</dd></div>' for l, f in (('Constraint', 'constraint'), ('Decision', 'decision'), ('Result', 'result')))
+            return f'{top}{shift}<h3 class="disp">{e(it["title"])}</h3><dl class="cdr">{cdr}</dl>'
+        cards = ''.join(f'<div data-reveal style="--d:{(k%3)*0.12:.2f}s"><article class="card impact">{card(k, it)}</article></div>' for k, it in enumerate(items))
         return f'''<section id="{s['id']}" class="sec pt0">
 <div class="wrap stack">{sticky(s['id'])}<div data-reveal><h2 class="disp">{s['heading']}</h2></div>
 <div class="grid-3">{cards}</div>
