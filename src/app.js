@@ -6,7 +6,7 @@
   var segButtons = document.querySelectorAll('[data-theme-set]');
   function applyTheme(mode) {
     if (mode) root.setAttribute('data-theme', mode); else root.removeAttribute('data-theme');
-    try { if (mode) localStorage.setItem('pf-theme', mode); else localStorage.removeItem('pf-theme'); } catch (e) {}
+    try { localStorage.setItem('pf-theme', mode || 'system'); } catch (e) {}
     segButtons.forEach(function (b) {
       var on = (b.getAttribute('data-theme-set') || '') === mode;
       b.classList.toggle('on', on);
@@ -152,6 +152,13 @@
     if (hn > 1 && !reduce) setInterval(function () { if (!hmanual && !document.hidden) hgo(hi + 1); }, HERO_MS);
     if (hn > 1) hgo(0);
   }
+
+  /* ---------- gallery tiles open the lightbox as one set ---------- */
+  document.querySelectorAll('[data-gallery]').forEach(function (gal) {
+    var btns = Array.prototype.slice.call(gal.querySelectorAll('.zoom'));
+    var set = btns.map(function (b) { var im = b.querySelector('img'); return { src: im.getAttribute('src'), alt: im.getAttribute('alt') || '' }; });
+    btns.forEach(function (b, i) { b.addEventListener('click', function () { lbOpen(set, i, b); }); });
+  });
 
   /* ---------- carousels ---------- */
   document.querySelectorAll('[data-carousel]').forEach(function (car) {
