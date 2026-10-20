@@ -12,13 +12,19 @@ Static single-page portfolio. No framework, no package manager, no tests: `build
 
 ## How the build works
 
-- `build.py` is the whole site generator. The content data (`HERO_PHOTOS`, `projects`, jobs, `SECTIONS`, `ICON_PATHS`, links) sits at the top. Small HTML helper functions follow, then a single f-string `page` template that writes `dist/index.html`. Edit content in those data lists, not in generated HTML.
+- `content.py` holds everything about the person (`PERSON`, `THEME`, `SECTIONS`, `HERO_PHOTOS`, `STATS`, `MARQUEE`, `IMPACT`, `JOBS`, `EARLIER`, `PROJECTS`, `GALLERY`, `PUBLICATIONS`, `SKILLS`, `EDUCATION`, `CERTIFICATIONS`, `LANGS`, `MONOGRAM`, `FOOTER`). `build.py` renders it: `render(C)` builds the page from `C.SECTIONS`, one renderer per section `type` in `RENDERERS`. Edit content in `content.py`, never in generated HTML; add a new section type by adding a renderer and CSS, not by special-casing the template.
+- `CONTENT=<path> python3 build.py` renders another content file (see `examples/`). A section listed in `SECTIONS` whose data is empty fails the build; remove it from the list instead.
+- `THEME` is emitted as an inline `<style>` after `styles.css` (accent per scheme, `--font-display/--font-body/--font-mono`) plus `data-default-theme` on `<html>`; the inline script applies it on first visit unless the visitor chose a theme (`pf-theme` in localStorage, `system` stored explicitly).
 - `dist/` is wiped on every build and is never committed.
 - Assets are shipped only if they're referenced through `asset('<path relative to src>')` (or `img(...)`, which calls it). `asset()` copies the file to `dist/` under a content-hashed name (`styles.<hash>.css`) and returns that path. A file dropped into `src/` without an `asset()` reference isn't published. `app.js` and `styles.css` load the same way. Only `robots.txt` and `CNAME` are copied verbatim.
 - Escape any text interpolated into the template with `e()` (`html.escape`). Strings that are already HTML (e.g. `TITLE` with `&amp;`) are inserted raw.
 - Company logos: `fetch_logos.py` writes `src/assets/logos/<slug>.svg|png`, and `build.py`'s `logo()` uses one when present, else falls back to the `MONOGRAM` text. Slugs must match in both files (`COMPANIES` in `fetch_logos.py`, `MONOGRAM` in `build.py`). Existing logo files are never overwritten without `--force`, so a hand-placed logo wins.
 - Tech-chip icons come from `src/icons.json` (name → SVG path), with `ICON_ALIAS` mapping variant names (e.g. `ASP.NET`) to one icon.
-- Project screenshot slides: `img('assets/<file>', 'caption', bg, pad)`. The background and padding default to the project's `slide_bg=(bg, padding)`. Mobile screenshots: `phones(['assets/<a>', 'assets/<b>'], 'caption')` shows one or more single-screen images side by side in a CSS phone frame (crop composites into one screen per file first).
+- Project screenshot slides: `img('assets/<file>', 'caption', bg, pad)` (paths are resolved through `asset()` at render time). The background and padding default to the project's `slide_bg=(bg, padding)`. Mobile screenshots: `phones(['assets/<a>', 'assets/<b>'], 'caption')` shows one or more single-screen images side by side in a CSS phone frame (crop composites into one screen per file first).
+
+## Section types
+
+`about` (heading, paragraphs, facts), `impact` (IMPACT cards), `experience` (JOBS timeline + EARLIER compact stops, `era_label`, `start_label`), `projects` (PROJECTS with sliders, `intro`, `cta`), `gallery` (GALLERY tiles, `wide`/`tall` spans, lightbox), `publications` (PUBLICATIONS rows), `skills` (SKILLS groups + EDUCATION, CERTIFICATIONS, LANGS), `contact` (heading, text, buttons, FOOTER). Hero without `HERO_PHOTOS` renders the text-only variant.
 
 ## Front end
 

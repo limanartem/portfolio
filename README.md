@@ -3,7 +3,9 @@
 Static portfolio site, built by `build.py` and deployed to GitHub Pages by the workflow in `.github/workflows/pages.yml`.
 
 ```
-build.py                 builds src/ → dist/ (index.html + content-hashed assets)
+build.py                 renders a content file into dist/ (index.html + content-hashed assets)
+content.py               everything about the person: sections, copy, jobs, projects, theme
+examples/                content files for other profile types (CONTENT=examples/<file>.py python3 build.py)
 src/styles.css           styling, light/dark themes
 src/app.js               theme selector, scroll reveal, sliders (autoplay)
 src/assets/              portrait, project screenshots, favicon
@@ -35,9 +37,16 @@ and the Pages workflow runs it on every build, so logos appear without any manua
 yourself (`<slug>.svg` or `.png`; slugs are listed in the script) is never overwritten, so swap in a proper
 brand asset whenever an icon looks poor. To refresh everything: `python3 fetch_logos.py --force`.
 
+## Making a site for someone else
+
+1. Copy the repo (GitHub "Use this template") and replace `content.py`. Nothing in `build.py`, `src/styles.css` or `src/app.js` needs to change for a different person.
+2. `SECTIONS` in `content.py` lists the sections in order; each has a `type` (`about`, `impact`, `experience`, `projects`, `gallery`, `publications`, `skills`, `contact`). Leave out what the person has nothing for: numbering and navigation follow the list, and a listed section with no data fails the build on purpose.
+3. `THEME` sets the accent (dark and light), the three font families with their Google Fonts query, and the first-visit scheme (`system`, `light` or `dark`). `PERSON` holds the hero copy and profile links; `HERO_PHOTOS` may be empty for a text-only hero; `STATS` and `MARQUEE` may be empty.
+4. `examples/content-designer.py` is a complete second profile (gallery-first, light, no timeline) to copy from. Preview any content file with `CONTENT=path/to/file.py python3 build.py`.
+
 ## Editing
 
-- Text and content: `build.py` (data lists at the top; the HTML template below them).
+- Text and content: `content.py`. `build.py` holds the HTML and the per-section renderers.
 - Project screenshots: drop the image in `src/assets/` and reference it as `img('assets/<file>', 'caption')` in that project's `slides` list. Background and padding come from the project's `slide_bg=(bg, padding)`, or pass them to `img()` to override one slide.
 - Sections, nav and the `01 / …` labels: the `SECTIONS` list. Profile links: `LINKEDIN` / `GITHUB`. Outline icons: `ICON_PATHS`.
 - Colours, fonts, spacing: the CSS variables at the top of `src/styles.css`.
