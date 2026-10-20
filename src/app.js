@@ -41,6 +41,28 @@
     window.matchMedia('(min-width: 761px)').addEventListener('change', function (m) { if (m.matches) setMenu(false); });
   }
 
+  /* ---------- highlight the nav link of the section in view ---------- */
+  var spyLinks = document.querySelectorAll('.navlinks a[href^="#"], #mobile-menu a[href^="#"]');
+  var spyIds = [], spySeen = {};
+  spyLinks.forEach(function (a) { var id = a.getAttribute('href').slice(1); if (id && !(id in spySeen) && document.getElementById(id)) { spySeen[id] = false; spyIds.push(id); } });
+  function spySet(id) {
+    spyLinks.forEach(function (a) {
+      var on = a.getAttribute('href') === '#' + id;
+      a.classList.toggle('on', on);
+      if (on) a.setAttribute('aria-current', 'location'); else a.removeAttribute('aria-current');
+    });
+  }
+  if (spyIds.length && 'IntersectionObserver' in window) {
+    /* a section is "current" while it crosses a thin band about a third of the way down the viewport */
+    var spy = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) { spySeen[en.target.id] = en.isIntersecting; });
+      var cur = null;
+      spyIds.forEach(function (id) { if (spySeen[id]) cur = id; });
+      spySet(cur);
+    }, { rootMargin: '-35% 0px -60% 0px' });
+    spyIds.forEach(function (id) { spy.observe(document.getElementById(id)); });
+  }
+
   /* ---------- scroll reveal ---------- */
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var targets = document.querySelectorAll('[data-reveal]');

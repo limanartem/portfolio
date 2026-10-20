@@ -54,6 +54,7 @@ h2.huge{font-size:clamp(44px,8vw,112px);line-height:.95;font-weight:800;max-widt
 .navlinks{display:flex;gap:2px;align-items:center}
 .navlink{color:var(--muted);text-decoration:none;font-size:14px;padding:10px 12px;border-radius:999px;transition:color .2s,background .2s}
 .navlink:hover{color:var(--text);background:var(--surface2)}
+.navlink.on{color:var(--accent);background:var(--accent-soft)}
 .nav-right{display:flex;align-items:center;gap:10px}
 .seg{display:flex;gap:2px;padding:3px;border-radius:999px;border:1px solid var(--line2);background:var(--surface)}
 .segbtn{width:38px;height:38px;border-radius:999px;border:0;background:transparent;color:var(--muted);display:grid;place-items:center;cursor:pointer;transition:background .25s,color .25s}
@@ -345,6 +346,7 @@ html[data-js] [data-reveal]{opacity:1 !important;transform:none !important}
 .mobile-menu[hidden]{display:none}
 .mobile-menu>a:not(.btn){font-family:'Bricolage Grotesque',ui-sans-serif,system-ui,sans-serif;font-size:24px;font-weight:600;text-decoration:none;padding:12px 4px;border-bottom:1px solid var(--line)}
 .mobile-menu>.btn{margin-top:14px;justify-content:center}
+.mobile-menu>a.on:not(.btn){color:var(--accent)}
 .mm-links{display:flex;gap:20px;margin-top:14px}
 .mm-links a{display:inline-flex;align-items:center;gap:8px;font-size:14px;color:var(--muted);text-decoration:none;min-height:44px}
 html.menu-open{overflow:hidden}
