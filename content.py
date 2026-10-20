@@ -64,11 +64,15 @@ SECTIONS = [
          buttons=[("Connect on LinkedIn", "https://www.linkedin.com/in/artem-liman", "LinkedIn"), ("github.com/limanartem", "https://github.com/limanartem", "GitHub")]),
 ]
 
+# (where, metric, title, text[, explore]). `explore=dict(kind=..., prompt=...)` adds an interactive model next to the
+# text (kinds in app.js: migration, columnstore); items without it render as plain cards.
 IMPACT = [
  ('CompuGroup Medical','MVP → Live','Took CGM Praxis into production','Led two teams taking a multi-tenant cloud SaaS for medical practices from MVP to production. Live since 2025 with several dozen practices onboarded. Owned the TI/gematik modules: VSDM, KIM, ePA, eAU, eArztbrief and e-signature.'),
- ('Avira / Gen','~200k accounts','Zero-knowledge backend migration','Moved Avira Password Manager onto Gen’s shared backend. Zero-knowledge encryption ruled out bulk re-encryption, so we designed a migration that moved each account safely on its next login over several months.'),
- ('inhive','Cloud eHealth platform','Built a medical data platform from the ground up','Led development of inhive’s own eHealth platform (web portal, taxonomy API and developer portal), bringing data from on-premise source systems into the cloud securely, with real-time access, cross-system reporting and fully automated CI/CD.'),
- ('Roche Diagnostics','SQL Server → SAP HANA','Re-platformed a biospecimen system','Architecture and development lead on a LIMS release that moved storage to SAP HANA and updated availability and replication, ready for larger datasets, more complex studies and globally distributed samples.'),
+ ('Avira / Gen','~200k accounts','Zero-knowledge backend migration','Moved Avira Password Manager onto Gen’s shared backend. Zero-knowledge encryption ruled out bulk re-encryption, so we designed a migration that moved each account safely on its next login over several months.',
+  dict(kind='migration', prompt='Why not just migrate everything overnight?')),
+ ('Roche','Prototype → Production','Research collaboration platform shipped','Led the team that took a Confluence-based research collaboration platform at Roche from prototype to production: hardened the add-ons, set up the delivery pipeline and put it in front of research teams for daily use.'),
+ ('Roche Diagnostics','SQL Server → SAP HANA','Re-platformed a biospecimen system','Architecture and development lead on a LIMS release that moved storage to SAP HANA and updated availability and replication, ready for larger datasets, more complex studies and globally distributed samples.',
+  dict(kind='columnstore', prompt='What does a column store change for a sample archive?')),
  ('Lufthansa Group','3 airlines, 1 platform','Public web platform at airline scale','Led a Scrum team on the group’s public-facing web platform, white-labeled for Lufthansa, SWISS and Austrian Airlines, from requirements to end-to-end delivery and third-party API coordination.'),
  ('Genentech · Merck · Bayer','Global pharma R&D','Architecture advisory in regulated life sciences','Assessed as-is architectures, designed target architectures and ran RFI/RFP vendor selections, including a LIMS for Genentech and a big-data and genome-analysis platform for Merck R&D.'),
 ]

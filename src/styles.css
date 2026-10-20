@@ -434,3 +434,30 @@ html.menu-open{overflow:hidden}
 .pub-venue{display:block;color:var(--muted);font-size:15px;margin-top:4px}
 .pub-note{margin:8px 0 0;color:var(--text2);font-size:15px}
 @media (max-width:640px){.pub{grid-template-columns:1fr;gap:4px}}
+
+/* impact explorables: text beside a small interactive model of the problem */
+.lab{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(20px,3vw,48px);align-items:start;padding:8px 0 32px;border-bottom:1px solid var(--line)}
+.lab-text{display:flex;flex-direction:column;gap:14px;position:sticky;top:calc(var(--bar-h,66px) + 56px)}
+.lab-text h3{font-size:clamp(22px,2.2vw,28px);font-weight:700;line-height:1.15}
+.lab-text p{color:var(--muted);font-size:16px;line-height:1.6}
+.lab-text .metric{font-size:clamp(34px,3.6vw,50px)}
+.lab-q{color:var(--accent) !important;font-size:13px !important;padding-top:6px}
+.lab-q::before{content:"▶ ";font-size:10px}
+.lab-panel{border:1px solid var(--line);border-radius:22px;background:var(--surface);padding:18px;display:flex;flex-direction:column;gap:14px;min-height:380px}
+html:not([data-js]) .lab-panel{display:none}
+.lab-ctl{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center}
+.lab-ctl label{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--faint);font-family:var(--font-mono),ui-monospace,monospace}
+.lab-ctl input[type=range]{width:120px;accent-color:var(--accent)}
+.lab-seg{display:inline-flex;gap:2px;padding:3px;border-radius:999px;border:1px solid var(--line2);background:var(--bg)}
+.lab-seg button{border:0;background:transparent;color:var(--muted);font:600 12px var(--font-body),system-ui,sans-serif;padding:7px 12px;border-radius:999px;cursor:pointer;transition:background .25s,color .25s}
+.lab-seg button:hover{color:var(--text)}
+.lab-seg button.on{background:var(--accent);color:var(--on-accent)}
+.lab-ctl .lab-play{margin-left:auto;border:1px solid var(--line2);background:var(--bg);color:var(--text);border-radius:999px;width:36px;height:36px;cursor:pointer;display:grid;place-items:center}
+.lab-ctl .lab-play:hover{border-color:var(--accent);color:var(--accent)}
+.lab-stage{position:relative;flex:1;min-height:250px;border-radius:14px;background:var(--bg);overflow:hidden}
+.lab-stage canvas{position:absolute;inset:0;width:100%;height:100%}
+.lab-read{display:flex;justify-content:space-between;gap:12px;font-size:13px;color:var(--text2);min-height:1.4em}
+.lab-read strong{color:var(--accent);font-weight:600}
+.lab-read>span:first-child{white-space:nowrap}
+.lab-note{color:var(--faint) !important;font-size:12px !important;line-height:1.5 !important;margin:0}
+@media (max-width:900px){.lab{grid-template-columns:minmax(0,1fr)}.lab-text{position:static}.lab-panel{padding:14px}.lab-ctl .lab-play{margin-left:0}}

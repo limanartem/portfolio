@@ -230,4 +230,174 @@
     go = function (i) { _go(i); var d = car.querySelector('.dot.on'); if (d) { d.classList.remove('run'); void d.offsetWidth; if (!manual && !reduce) d.classList.add('run'); } };
     go(0);
   });
+  /* ---------- impact explorables: small interactive models of the problem behind an outcome ---------- */
+  var LAB = {};
+  function labEl(tag, cls, text) { var el = document.createElement(tag); if (cls) el.className = cls; if (text != null) el.textContent = text; return el; }
+  function labSeg(opts, cur, onPick) {
+    var seg = labEl('div', 'lab-seg');
+    opts.forEach(function (o) {
+      var b = labEl('button', o[0] === cur ? 'on' : '', o[1]); b.type = 'button';
+      b.addEventListener('click', function () { seg.querySelectorAll('button').forEach(function (x) { x.classList.remove('on'); }); b.classList.add('on'); onPick(o[0]); });
+      seg.appendChild(b);
+    });
+    return seg;
+  }
+  function labRange(text, min, max, val, step, onInput) {
+    var l = labEl('label'), r = labEl('input'); r.type = 'range'; r.min = min; r.max = max; r.value = val; r.step = step || 1;
+    var t = labEl('span', '', text); l.appendChild(t); l.appendChild(r);
+    r.addEventListener('input', function () { onInput(parseFloat(r.value), t); });
+    return { el: l, input: r, label: t };
+  }
+  function labColors() {
+    var cs = getComputedStyle(root);
+    return { accent: cs.getPropertyValue('--accent').trim(), line: cs.getPropertyValue('--line2').trim(), faint: cs.getPropertyValue('--faint').trim(), text: cs.getPropertyValue('--text2').trim(), muted: cs.getPropertyValue('--muted').trim(),
+      mono: (cs.getPropertyValue('--font-mono').trim() || 'monospace') + ', ui-monospace, monospace' };
+  }
+  function labCanvas(stage) {
+    var cv = labEl('canvas'); stage.appendChild(cv);
+    var ctx = cv.getContext('2d'), W = 0, H = 0;
+    function size() { var r = stage.getBoundingClientRect(), d = Math.min(window.devicePixelRatio || 1, 2); W = r.width; H = r.height; cv.width = Math.round(W * d); cv.height = Math.round(H * d); ctx.setTransform(d, 0, 0, d, 0, 0); }
+    size(); window.addEventListener('resize', size);
+    return { ctx: ctx, w: function () { return W; }, h: function () { return H; }, size: size };
+  }
+  function seeded(seed) { return function () { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; }; }
+  function fmtInt(n) { return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
+
+  /* Avira: ~200k zero-knowledge vaults can't be re-encrypted server-side, so each moves when its owner next logs in */
+  LAB.migration = function (panel) {
+    var N = 240, DAYS = 365, acc = [], R = seeded(42), i;
+    for (i = 0; i < N; i++) acc.push({ u: R(), fast: 1 + R() * 13, slow: 30 + R() * 240, ph: R() });
+    var st = { strategy: 'login', zk: true, occ: .45, day: 0, playing: false };
+    var ctl = labEl('div', 'lab-ctl'), stage = labEl('div', 'lab-stage'), read = labEl('div', 'lab-read mono');
+    ctl.appendChild(labSeg([['login', 'Migrate on next login'], ['bulk', 'Bulk re-encrypt overnight']], st.strategy, function (v) { st.strategy = v; st.day = 0; }));
+    ctl.appendChild(labSeg([['zk', 'Zero-knowledge'], ['keys', 'Server holds keys']], 'zk', function (v) { st.zk = v === 'zk'; st.day = 0; }));
+    var occ = labRange('occasional users 45%', 0, 100, 45, 1, function (v, t) { st.occ = v / 100; t.textContent = 'occasional users ' + v + '%'; });
+    ctl.appendChild(occ.el);
+    var play = labEl('button', 'lab-play'); play.type = 'button'; play.setAttribute('aria-label', 'Play'); play.innerHTML = '&#9654;';
+    play.addEventListener('click', function () { if (st.day >= DAYS) st.day = 0; st.playing = !st.playing; });
+    ctl.appendChild(play);
+    var scrub = labRange('day 0', 0, DAYS, 0, 1, function (v, t) { st.day = v; st.playing = false; });
+    scrub.el.style.flexBasis = '100%'; scrub.input.style.width = '100%'; scrub.input.style.flex = '1';
+    ctl.appendChild(scrub.el);
+    panel.appendChild(ctl); panel.appendChild(stage); panel.appendChild(read);
+    panel.appendChild(labEl('p', 'lab-note', 'Illustrative model. Each square stands for about 800 accounts; login intervals are made up (regular users every 1–14 days, occasional users every 1–9 months), the ~200k total and the months-long tail are real.'));
+    var C = labCanvas(stage), last = 0;
+    function doneAt(a) { // day the account is migrated, or Infinity
+      if (st.strategy === 'bulk') return st.zk ? Infinity : 1;
+      var iv = a.u < st.occ ? a.slow : a.fast; return iv * a.ph;
+    }
+    function frame(now) {
+      if (st.playing && !reduce) { st.day = Math.min(DAYS, st.day + (now - last) / 1000 * 70); if (st.day >= DAYS) st.playing = false; }
+      last = now; scrub.input.value = st.day; scrub.label.textContent = 'day ' + Math.round(st.day);
+      play.innerHTML = st.playing ? '&#10074;&#10074;' : '&#9654;';
+      var ctx = C.ctx, W = C.w(), H = C.h(), col = labColors();
+      ctx.clearRect(0, 0, W, H);
+      var ds = acc.map(doneAt), done = 0;
+      /* left: the vault grid */
+      var gw = Math.min(W * .52, H * 1.1), cols = 20, rows = N / cols, cell = gw / cols, gx = 18, gy = (H - rows * cell) / 2;
+      for (i = 0; i < N; i++) {
+        var x = gx + (i % cols) * cell, y = gy + Math.floor(i / cols) * cell, s = cell * .68, m = (cell - s) / 2, ok = ds[i] <= st.day;
+        if (ok) done++;
+        ctx.fillStyle = ok ? col.accent : col.line; ctx.globalAlpha = ok ? 1 : .9;
+        ctx.fillRect(x + m, y + m, s, s);
+        if (st.strategy === 'bulk' && st.zk && st.day > 0) { ctx.strokeStyle = col.faint; ctx.globalAlpha = .8; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(x + m, y + m); ctx.lineTo(x + m + s, y + m + s); ctx.stroke(); }
+      }
+      ctx.globalAlpha = 1; ctx.font = '600 11px ' + col.mono; ctx.fillStyle = col.faint; ctx.textAlign = 'left';
+      ctx.fillText('ACCOUNTS', gx, gy - 8);
+      /* right: cumulative migration curve */
+      var px = gx + gw + 28, pw = W - px - 18, py = gy + 6, ph = rows * cell - 24;
+      ctx.strokeStyle = col.line; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(px, py + ph); ctx.lineTo(px + pw, py + ph); ctx.stroke();
+      ctx.fillStyle = col.faint; ctx.fillText('MIGRATED', px, py - 8); ctx.textAlign = 'right'; ctx.fillText('12 MONTHS', px + pw, py + ph + 16); ctx.textAlign = 'left'; ctx.fillText('0', px, py + ph + 16);
+      var sorted = ds.slice().sort(function (a, b) { return a - b; });
+      ctx.lineWidth = 2;
+      [[0, st.day, col.accent, 1], [st.day, DAYS, col.faint, .35]].forEach(function (seg) {
+        ctx.strokeStyle = seg[2]; ctx.globalAlpha = seg[3]; ctx.beginPath();
+        for (var d = seg[0], f = true; d <= seg[1]; d = Math.min(seg[1], d + 2)) {
+          var k = 0; while (k < N && sorted[k] <= d) k++;
+          var cx = px + d / DAYS * pw, cy = py + ph - k / N * ph;
+          if (f) { ctx.moveTo(cx, cy); f = false; } else ctx.lineTo(cx, cy);
+          if (d === seg[1]) break;
+        }
+        ctx.stroke();
+      });
+      ctx.globalAlpha = 1;
+      var tx = px + st.day / DAYS * pw;
+      ctx.strokeStyle = col.faint; ctx.setLineDash([3, 4]); ctx.beginPath(); ctx.moveTo(tx, py); ctx.lineTo(tx, py + ph); ctx.stroke(); ctx.setLineDash([]);
+      ctx.fillStyle = col.accent; ctx.beginPath(); ctx.arc(tx, py + ph - done / N * ph, 4, 0, 6.3); ctx.fill();
+      var pct = Math.round(done / N * 100), msg;
+      if (st.strategy === 'bulk' && st.zk) msg = st.day > 0 ? '<strong>blocked</strong> · the server never sees a master password, so it has nothing to re-encrypt with' : 'press play to run the overnight job';
+      else if (st.strategy === 'bulk') msg = '<strong>' + pct + '%</strong> in one night · but a server that can read vaults is not a password manager';
+      else msg = '<strong>' + pct + '%</strong> migrated · ' + (pct < 100 ? 'the tail is the occasional users; nobody is locked out, each vault moves on its own login' : 'done, every vault moved under its own master password');
+      read.innerHTML = '<span>day ' + Math.round(st.day) + ' of 365</span><span>' + msg + '</span>';
+      requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+  };
+
+  /* Roche: a LIMS whose queries went analytical. Row store vs column store, measured in pages read. */
+  LAB.columnstore = function (panel) {
+    var COLS = ['id', 'study', 'site', 'donor', 'collected', 'volume', 'temp', 'status', 'box', 'slot', 'consent', 'notes'], PAGE = 64;
+    var st = { layout: 'row', query: 'sum', rows: 20000, t0: 0 };
+    var ctl = labEl('div', 'lab-ctl'), stage = labEl('div', 'lab-stage'), read = labEl('div', 'lab-read mono');
+    ctl.appendChild(labSeg([['row', 'Row store'], ['column', 'Column store']], st.layout, function (v) { st.layout = v; st.t0 = performance.now(); }));
+    ctl.appendChild(labSeg([['sum', 'Average volume across all samples'], ['point', 'One sample by id']], st.query, function (v) { st.query = v; st.t0 = performance.now(); }));
+    var rows = labRange('samples 20,000', 2, 6, Math.log10(st.rows), .05, function (v, t) { st.rows = Math.round(Math.pow(10, v)); t.textContent = 'samples ' + fmtInt(st.rows); st.t0 = performance.now(); });
+    ctl.appendChild(rows.el);
+    panel.appendChild(ctl); panel.appendChild(stage); panel.appendChild(read);
+    panel.appendChild(labEl('p', 'lab-note', 'Illustrative model: 12 columns per sample, 64 values per page, no indexes or compression. Pages touched is the cost that grows with the archive; HANA’s column store made the study-wide questions cheap at the sizes the LIMS was heading for.'));
+    var C = labCanvas(stage);
+    function cost(layout, query, n) {
+      var pagesAll = Math.ceil(n * COLS.length / PAGE), perCol = Math.ceil(n / PAGE);
+      if (layout === 'row') return { all: pagesAll, read: query === 'sum' ? pagesAll : 1 };
+      return { all: perCol * COLS.length, read: query === 'sum' ? perCol : COLS.length };
+    }
+    function frame(now) {
+      var ctx = C.ctx, W = C.w(), H = C.h(), col = labColors(), cur = cost(st.layout, st.query, st.rows);
+      var sweep = reduce ? 1 : Math.min(1, (now - st.t0) / 1100), ease = sweep * sweep * (3 - 2 * sweep);
+      ctx.clearRect(0, 0, W, H);
+      /* page blocks: in a column store the pages are laid out one band per column, so a one-column scan is one band */
+      var top = 30, barH = 54, gh = H - top - barH - 22, gx = 18, gw = W - 36;
+      var bands = st.layout === 'column' ? COLS.length : 1, perBand = Math.ceil(cur.all / bands);
+      var bc = W > 640 ? 56 : 36, cw = (gw - (bands > 1 ? 52 : 0)) / bc, ch = cw;
+      var br = Math.max(1, Math.min(Math.ceil(perBand / bc), Math.floor(gh / bands / ch)));
+      var ox = gx + (bands > 1 ? 52 : 0), oy = top + (gh - bands * br * ch) / 2;
+      var scale = Math.max(1, perBand / (bc * br)); // blocks stand for several pages when the archive is big
+      var lit = Math.round(cur.read * ease), VOL = COLS.indexOf('volume');
+      function isRead(band, k) { // is block k of this band among the pages read so far in the sweep
+        var pageNo = k * scale;
+        if (st.layout === 'row') return st.query === 'sum' ? pageNo < lit : (k === 0 && lit > 0);
+        return st.query === 'sum' ? (band === VOL && pageNo < lit) : (k === 0 && band < lit);
+      }
+      ctx.font = '600 11px ' + col.mono; ctx.textAlign = 'left'; ctx.fillStyle = col.faint;
+      ctx.fillText((st.layout === 'row' ? 'PAGES, EACH HOLDING WHOLE ROWS' : 'PAGES, ONE BAND PER COLUMN') + ' · ' + fmtInt(cur.all) + ' PAGES', gx, 18);
+      for (var b = 0; b < bands; b++) for (var r = 0; r < br; r++) for (var c = 0; c < bc; c++) {
+        if ((r * bc + c) * scale >= perBand) continue;
+        var on = isRead(b, r * bc + c);
+        var x = ox + c * cw, y = oy + (b * br + r) * ch, s = Math.max(1, cw - 1.5);
+        ctx.fillStyle = on ? col.accent : col.line; ctx.globalAlpha = on ? 1 : .55; ctx.fillRect(x, y, s, Math.max(1, ch - 1.5));
+      }
+      ctx.globalAlpha = 1;
+      if (st.layout === 'column') { ctx.fillStyle = col.faint; ctx.textAlign = 'right'; ctx.font = '500 9px ' + col.mono; for (b = 0; b < bands; b++) if (br * ch >= 8) ctx.fillText(COLS[b], ox - 6, oy + (b + .5) * br * ch + 3); }
+      /* the comparison that matters: pages read by each layout for this query at this size */
+      var rowC = cost('row', st.query, st.rows), colC = cost('column', st.query, st.rows), mx = Math.max(rowC.read, colC.read), by = H - barH - 4, bw = gw - 110 - 110;
+      ctx.font = '600 11px ' + col.mono; ctx.textAlign = 'left';
+      [['ROW STORE', rowC.read, 'row'], ['COLUMN STORE', colC.read, 'column']].forEach(function (q, k) {
+        var y = by + k * 26, w = Math.max(2, q[1] / mx * bw * (q[2] === st.layout ? ease : 1)), me = q[2] === st.layout;
+        ctx.fillStyle = me ? col.text : col.faint; ctx.fillText(q[0], gx, y + 11);
+        ctx.fillStyle = me ? col.accent : col.line; ctx.fillRect(gx + 110, y, w, 14);
+        ctx.fillStyle = col.text; ctx.fillText(fmtInt(q[1]) + ' pages', gx + 116 + w, y + 11);
+      });
+      var ratio = rowC.read / colC.read, msg;
+      if (st.query === 'sum') msg = 'a study-wide question touches <strong>' + (ratio >= 1.5 ? Math.round(ratio) + '× fewer' : 'about as many') + ' pages</strong> in the column store' + (st.rows >= 100000 ? ', and the gap grows with the archive' : '');
+      else msg = 'a single lookup is <strong>cheap either way</strong>: ' + COLS.length + ' pages instead of 1, which is why row stores won while the workload was clerical';
+      read.innerHTML = '<span>' + fmtInt(cur.read) + ' of ' + fmtInt(cur.all) + ' pages read</span><span>' + msg + '</span>';
+      requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+  };
+
+  document.querySelectorAll('[data-lab]').forEach(function (panel) {
+    var kind = panel.getAttribute('data-lab');
+    if (LAB[kind]) LAB[kind](panel);
+  });
 })();
