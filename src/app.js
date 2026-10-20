@@ -133,7 +133,7 @@
   var hero = document.querySelector('[data-hero]');
   if (hero) {
     var hp = hero.querySelectorAll('.hero-photo'), hd = hero.querySelectorAll('.hdot'), hcap = hero.querySelector('.hcap');
-    var HERO_MS = 6000, hn = hp.length, hi = 0, hmanual = false;
+    var HERO_MS = 9000, hn = hp.length, hi = 0, hmanual = false;
     hero.style.setProperty('--dot-ms', HERO_MS + 'ms');
     function hgo(i) {
       hi = ((i % hn) + hn) % hn;

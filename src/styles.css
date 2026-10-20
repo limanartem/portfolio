@@ -83,6 +83,7 @@ h2.huge{font-size:clamp(44px,8vw,112px);line-height:.95;font-weight:800;max-widt
 .hero-photo.on{opacity:1;z-index:-2;transition:none}
 .hero-photo.out{opacity:0;z-index:-1}
 @keyframes drift{from{background-size:100%}to{background-size:106%}}
+@keyframes drift-m{from{transform:scale(1)}to{transform:scale(1.06)}}  /* mobile: background-size is pinned to cover, so zoom the element */
 .hero-shade{position:absolute;inset:0;z-index:-1;pointer-events:none;background:
   linear-gradient(90deg,var(--bg) 0%,var(--bg) 30%,rgba(var(--shade),.92) 42%,rgba(var(--shade),.65) 54%,rgba(var(--shade),.3) 66%,rgba(var(--shade),.06) 78%,rgba(var(--shade),0) 90%),
   linear-gradient(180deg,rgba(var(--shade),.35) 0%,rgba(var(--shade),0) 22%,rgba(var(--shade),0) 70%,var(--bg) 100%)}
@@ -113,7 +114,7 @@ h1.disp{font-weight:800;font-size:clamp(52px,9vw,124px);line-height:.92;text-sha
 .d1{animation-delay:.25s}.d2{animation-delay:.4s}.d3{animation-delay:.55s}.d4{animation-delay:.7s}
 @media (max-width:900px){
 .hero{min-height:0;align-items:flex-end}
-.hero-photo{aspect-ratio:auto;width:100%;height:54svh;min-height:380px;inset:0 0 auto 0;background-size:cover !important;background-position:58% 0;animation:none;
+.hero-photo{aspect-ratio:auto;width:100%;height:54svh;min-height:380px;inset:0 0 auto 0;background-size:cover !important;background-position:58% 0;transform-origin:58% 0;animation:drift-m 18s ease-in-out infinite alternate;
   -webkit-mask-image:linear-gradient(180deg,#000 0,#000 50%,rgba(0,0,0,.5) 76%,transparent 100%);mask-image:linear-gradient(180deg,#000 0,#000 50%,rgba(0,0,0,.5) 76%,transparent 100%)}
 .hero-shade{background:linear-gradient(180deg,rgba(var(--shade),.45) 0,rgba(var(--shade),0) 12svh,rgba(var(--shade),0) 26svh,rgba(var(--shade),.5) 38svh,rgba(var(--shade),.88) 47svh,var(--bg) 54svh)}
 .hero-wrap{padding:34svh 16px 28px}
