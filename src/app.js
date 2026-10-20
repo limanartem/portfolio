@@ -66,15 +66,48 @@
   /* ---------- scroll reveal ---------- */
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var targets = document.querySelectorAll('[data-reveal]');
+  /* numbers marked data-count tick up from zero when their block is revealed; the markup already holds the final value */
+  function countUp(el, delay) {
+    var raw = el.getAttribute('data-count'), end = parseFloat(raw.replace(/,/g, ''));
+    if (isNaN(end)) return;
+    var dec = (raw.split('.')[1] || '').length, sep = raw.indexOf(',') > -1, t0 = null, dur = 1100;
+    function fmt(v) { var s = v.toFixed(dec); return sep ? s.replace(/\B(?=(\d{3})+(?!\d))/g, ',') : s; }
+    function step(ts) {
+      if (t0 === null) t0 = ts;
+      var p = Math.min(1, (ts - t0) / dur), k = 1 - Math.pow(1 - p, 3);
+      el.textContent = p < 1 ? fmt(end * k) : raw;
+      if (p < 1) requestAnimationFrame(step);
+    }
+    el.textContent = fmt(0);
+    setTimeout(function () { requestAnimationFrame(step); }, delay);
+  }
   if (!reduce && 'IntersectionObserver' in window) {
     var io = new IntersectionObserver(function (entries, obs) {
       entries.forEach(function (en) {
-        if (en.isIntersecting) { en.target.setAttribute('data-shown', ''); obs.unobserve(en.target); }
+        if (en.isIntersecting) {
+          en.target.setAttribute('data-shown', ''); obs.unobserve(en.target);
+          var delay = (parseFloat(en.target.style.getPropertyValue('--d')) || 0) * 1000 + 150;
+          en.target.querySelectorAll('[data-count]').forEach(function (n) { countUp(n, delay); });
+        }
       });
     }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
     targets.forEach(function (el) { io.observe(el); });
   } else {
     targets.forEach(function (el) { el.setAttribute('data-shown', ''); });
+  }
+
+  /* ---------- pointer spotlight and tilt on cards marked data-tilt (mouse/trackpad only) ---------- */
+  if (!reduce && window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+    document.querySelectorAll('[data-tilt]').forEach(function (card) {
+      card.addEventListener('pointermove', function (ev) {
+        var r = card.getBoundingClientRect(), x = (ev.clientX - r.left) / r.width, y = (ev.clientY - r.top) / r.height;
+        card.style.setProperty('--mx', (x * 100).toFixed(1) + '%');
+        card.style.setProperty('--my', (y * 100).toFixed(1) + '%');
+        card.style.setProperty('--rx', ((x - 0.5) * 5).toFixed(2) + 'deg');
+        card.style.setProperty('--ry', ((0.5 - y) * 5).toFixed(2) + 'deg');
+      });
+      card.addEventListener('pointerleave', function () { card.style.setProperty('--rx', '0deg'); card.style.setProperty('--ry', '0deg'); });
+    });
   }
 
   /* ---------- reading progress (fallback for browsers without scroll-timeline) ---------- */

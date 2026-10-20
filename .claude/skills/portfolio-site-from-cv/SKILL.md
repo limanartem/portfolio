@@ -46,7 +46,7 @@ Commit to one nameable direction and state it; offer two or three low-fi candida
 ## 3. Copy rules (everyone)
 
 - Lead with what the person does for others, in plain words. Every line is sourced from the CV, their material or a confirmation; missing facts become visible placeholders, never inventions.
-- `IMPACT`, if used: a handful of large, concrete results. Process metrics and compliance work belong in job bullets.
+- `IMPACT`, if used: a handful of large, concrete results, each `dict(where, metric, title, body, tags=[])`. Write the metric as `before → after` where there is a real shift (it animates), keep numbers in it (they count up), and use 2–3 short tags. Process metrics and compliance work belong in job bullets.
 - No em dashes; commas, colons, full stops, brackets instead. En dash for ranges. No filler, no superlatives the person did not use.
 - Projects and gallery captions: what it is and for whom first, how it was made second. Drop images that look AI-generated unless they are the person's own work.
 - Section labels are numbered automatically ("01 / About"); headings plain.

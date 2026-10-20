@@ -28,9 +28,9 @@ Follow the skill in `.claude/skills/portfolio-site-from-cv/SKILL.md` (discovery,
 
 ## Section types
 
-`about` (heading, paragraphs, facts), `impact` (IMPACT cards), `experience` (JOBS timeline + EARLIER compact stops, `era_label`, `start_label`), `projects` (PROJECTS with sliders, `intro`, `cta`), `gallery` (GALLERY tiles, `wide`/`tall` spans, lightbox), `publications` (PUBLICATIONS rows), `skills` (SKILLS groups + EDUCATION, CERTIFICATIONS, LANGS), `contact` (heading, text, buttons, FOOTER). Hero without `HERO_PHOTOS` renders the text-only variant.
+`about` (heading, paragraphs, facts), `impact` (IMPACT cards: `dict(where, metric, title, body, tags=[])`; a metric written as `before → after` renders as an arrow that draws itself on reveal, numbers in it count up, and cards get a pointer spotlight and tilt on desktop), `experience` (JOBS timeline + EARLIER compact stops, `era_label`, `start_label`), `projects` (PROJECTS with sliders, `intro`, `cta`), `gallery` (GALLERY tiles, `wide`/`tall` spans, lightbox), `publications` (PUBLICATIONS rows), `skills` (SKILLS groups + EDUCATION, CERTIFICATIONS, LANGS), `contact` (heading, text, buttons, FOOTER). Hero without `HERO_PHOTOS` renders the text-only variant.
 
 ## Front end
 
-- `src/app.js` is a plain ES5 IIFE, with no build step or dependencies. It finds behaviour hooks by `data-*` attributes that `build.py` emits (`data-carousel`, `data-captions`, `data-reveal`, `data-hero`, `data-lb-*`, `data-theme-set`). If you rename one, change both files.
+- `src/app.js` is a plain ES5 IIFE, with no build step or dependencies. It finds behaviour hooks by `data-*` attributes that `build.py` emits (`data-carousel`, `data-captions`, `data-reveal`, `data-count`, `data-tilt`, `data-hero`, `data-lb-*`, `data-theme-set`). If you rename one, change both files.
 - Theming: the dark palette is the `:root` default in `src/styles.css`. Light mode applies via `prefers-color-scheme` unless `[data-theme="dark"]` is set. The theme toggle in `app.js` stores the choice in `localStorage` (`pf-theme`) and sets `data-theme` on `<html>`. Colours, fonts and spacing are CSS variables at the top of `styles.css`.

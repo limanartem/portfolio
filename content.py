@@ -65,12 +65,24 @@ SECTIONS = [
 ]
 
 IMPACT = [
- ('CompuGroup Medical','MVP → Live','Took CGM Praxis into production','Led two teams taking a multi-tenant cloud SaaS for medical practices from MVP to production. Live since 2025 with several dozen practices onboarded. Owned the TI/gematik modules: VSDM, KIM, ePA, eAU, eArztbrief and e-signature.'),
- ('Avira / Gen','~200k accounts','Zero-knowledge backend migration','Moved Avira Password Manager onto Gen’s shared backend. Zero-knowledge encryption ruled out bulk re-encryption, so we designed a migration that moved each account safely on its next login over several months.'),
- ('inhive','Cloud eHealth platform','Built a medical data platform from the ground up','Led development of inhive’s own eHealth platform (web portal, taxonomy API and developer portal), bringing data from on-premise source systems into the cloud securely, with real-time access, cross-system reporting and fully automated CI/CD.'),
- ('Roche Diagnostics','SQL Server → SAP HANA','Re-platformed a biospecimen system','Architecture and development lead on a LIMS release that moved storage to SAP HANA and updated availability and replication, ready for larger datasets, more complex studies and globally distributed samples.'),
- ('Lufthansa Group','3 airlines, 1 platform','Public web platform at airline scale','Led a Scrum team on the group’s public-facing web platform, white-labeled for Lufthansa, SWISS and Austrian Airlines, from requirements to end-to-end delivery and third-party API coordination.'),
- ('Genentech · Merck · Bayer','Global pharma R&D','Architecture advisory in regulated life sciences','Assessed as-is architectures, designed target architectures and ran RFI/RFP vendor selections, including a LIMS for Genentech and a big-data and genome-analysis platform for Merck R&D.'),
+ dict(where='CompuGroup Medical', metric='MVP → Live', title='Took CGM Praxis into production',
+      body='Led two teams taking a multi-tenant cloud SaaS for medical practices from MVP to production. Live since 2025 with several dozen practices onboarded. Owned the TI/gematik modules: VSDM, KIM, ePA, eAU, eArztbrief and e-signature.',
+      tags=['2 teams · 15 engineers', 'TI/gematik', 'Multi-tenant SaaS']),
+ dict(where='Avira / Gen', metric='~200k accounts', title='Zero-knowledge backend migration',
+      body='Moved Avira Password Manager onto Gen’s shared backend. Zero-knowledge encryption ruled out bulk re-encryption, so we designed a migration that moved each account safely on its next login over several months.',
+      tags=['Zero-knowledge', 'Per-login migration', 'AWS']),
+ dict(where='Roche Diagnostics', metric='SQL Server → SAP HANA', title='Re-platformed a biospecimen system',
+      body='Architecture and development lead on a LIMS release that moved storage to SAP HANA and updated availability and replication, ready for larger datasets, more complex studies and globally distributed samples.',
+      tags=['LIMS', 'Availability & replication', 'Global samples']),
+ dict(where='Roche', metric='Hours → seconds', title='Real-time analytics on in-memory SAP HANA',
+      body='Built a real-time analytical data warehouse on in-memory SAP HANA. Complex reports and dashboards that used to take hours to render now come back in seconds.',
+      tags=['In-memory DWH', 'Real-time reporting', 'SAP HANA']),
+ dict(where='Lufthansa Group', metric='3 airlines · 5 teams · 1 platform', title='Public web platform at airline scale',
+      body='Led one of the five Scrum teams on the group’s public-facing web platform, white-labeled for Lufthansa, SWISS and Austrian Airlines, from requirements to end-to-end delivery and third-party API coordination.',
+      tags=['Scrum', 'White-label', 'Third-party APIs']),
+ dict(where='Genentech · Merck · Bayer', metric='Assessment → integration', title='Vendor selection against an evolvable target architecture',
+      body='Designed evolvable target architectures for regulated R&D and assessed vendors technically against them in RFI/RFP rounds. For Genentech’s LIMS this went past selection: I stayed on to integrate the chosen vendor into the delivery process. Also a big-data and genome-analysis platform for Merck R&D.',
+      tags=['Evolvable architecture', 'RFI/RFP', 'LIMS vendor integration']),
 ]
 
 JOBS = [
@@ -93,11 +105,12 @@ JOBS = [
       tech=['TypeScript','React','Node.js','C# / .NET Core','Kotlin','Swift','Python','AWS','DynamoDB','Docker','Jenkins','A/B testing']),
  dict(logo='inhive', period='May 2012 – May 2020', company='inhive Group', place='Germany', role='Lead Engineer · Team Lead · Architect',
       scope='Lead and architect roles on healthcare, pharma and aviation projects for Roche, Lufthansa Group, Genentech, Merck and Bayer.',
-      points=['Lufthansa Group: led a Scrum team on the white-labeled public web platform for Lufthansa, SWISS and Austrian Airlines.',
+      points=['Lufthansa Group: led one of the five Scrum teams on the white-labeled public web platform for Lufthansa, SWISS and Austrian Airlines.',
               'Roche Diagnostics: architecture and development lead on a biospecimen-management (LIMS) release moving to SAP HANA.',
+              'Roche: built a real-time analytical data warehouse on in-memory SAP HANA; complex reports and dashboards went from hours to seconds.',
               'Led inhive’s own eHealth platform (web portal, taxonomy API, developer portal) on Azure and SAP HANA Cloud Platform.',
               'Roche: led the team that took a Confluence-based research collaboration platform from prototype to production.',
-              'Genentech, Merck, Bayer: architecture assessments, target architectures, RFI/RFP vendor selection and distributed PoCs.'],
+              'Genentech, Merck, Bayer: target architectures, technical vendor assessments and RFI/RFP selection, then integration of the selected LIMS vendor; distributed PoCs.'],
       tech=['.NET','ASP.NET Core','C#','Java','Azure','SAP HANA','SQL Server','Cosmos DB','MongoDB','Atlassian SDK']),
 ]
 

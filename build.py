@@ -4,7 +4,7 @@
 Content lives in content.py (or the file named by the CONTENT env var); this file only renders it.
 Sections are rendered in the order of content.SECTIONS, each by the renderer for its `type`.
 """
-import html, os, shutil, json, importlib.util, sys
+import html, os, re, shutil, json, importlib.util, sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 SRC = os.path.join(HERE, "src")
@@ -197,9 +197,24 @@ def render(C):
 </section>'''
 
     def sec_impact(s):
-        items = get('IMPACT', [])
+        """Outcome cards. Items: dict(where, metric, title, body, tags=[]) or a (where, metric, title, body) tuple.
+        A metric written as "before → after" renders as a shift that draws itself on reveal; numbers in it count up."""
+        items = [i if isinstance(i, dict) else dict(zip(('where', 'metric', 'title', 'body'), i)) for i in get('IMPACT', [])]
         if not items: return ''
-        cards = ''.join(f'<div data-reveal style="--d:{(k%3)*0.12:.2f}s"><article class="card impact"><div class="card-top mono"><span>{e(w)}</span><span>{k+1:02d}</span></div><div class="disp metric">{e(m)}</div><h3 class="disp">{e(t)}</h3><p>{e(b)}</p></article></div>' for k, (w, m, t, b) in enumerate(items))
+        NUM = r'\d[\d,]*(?:\.\d+)?'
+        def counted(t):
+            return ''.join(f'<span data-count="{p}">{p}</span>' if re.fullmatch(NUM, p) else e(p) for p in re.split(f'({NUM})', t))
+        def metric(m):
+            parts = [p.strip() for p in m.split('→')]
+            if len(parts) == 2 and all(parts):
+                return f'<span class="shift"><span class="from">{counted(parts[0])}</span><span class="arr" aria-hidden="true"></span><span class="sr"> to </span><span class="to">{counted(parts[1])}</span></span>'
+            return counted(m)
+        def card(k, i):
+            tags = f'<div class="chips">{chips(i["tags"])}</div>' if i.get('tags') else ''
+            return (f'<div data-reveal style="--d:{(k%3)*0.12:.2f}s"><article class="card impact" data-tilt>'
+                    f'<div class="card-top mono"><span>{e(i["where"])}</span><span>{k+1:02d}</span></div>'
+                    f'<div class="disp metric">{metric(i["metric"])}</div><h3 class="disp">{e(i["title"])}</h3><p>{e(i["body"])}</p>{tags}</article></div>')
+        cards = ''.join(card(k, i) for k, i in enumerate(items))
         return f'''<section id="{s['id']}" class="sec pt0">
 <div class="wrap stack">{sticky(s['id'])}<div data-reveal><h2 class="disp">{s['heading']}</h2></div>
 <div class="grid-3">{cards}</div>
