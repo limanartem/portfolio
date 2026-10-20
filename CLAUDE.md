@@ -6,7 +6,7 @@ Static single-page portfolio. No framework, no package manager, no tests: `build
 
 ## Making a site for another person
 
-Follow the skill in `.claude/skills/portfolio-site-from-cv/SKILL.md` (discovery, module choice, design direction, copy rules, verification). Only `content.py` changes for a new person.
+Follow the skill in `.claude/skills/portfolio-site-from-cv/SKILL.md` (discovery, module choice, design direction, copy rules, rebrand, verification). The content goes in `content.py`. The previous owner also has to be removed from the README, this file, the `SITE_URL` default, the favicon, `fetch_logos.py` and `src/assets/` (skill step 5).
 
 ## Commands
 
